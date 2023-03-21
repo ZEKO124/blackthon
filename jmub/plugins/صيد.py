@@ -144,7 +144,7 @@ async def hunterusername(event):
             ch = await jmub(
                 functions.channels.CreateChannelRequest(
                     title="GipThon HUNTER - صيد جبثون",
-                    about="This channel to hunt username by - @GipThon7 ",
+                    about="This channel to hunt username by - @GibThon7 ",
                 )
             )
             ch = ch.updates[1].channel_id
@@ -170,7 +170,7 @@ async def hunterusername(event):
                 )
                 await event.client.send_message(
                     event.chat_id,
-                    f"- Done : @{username} !\n- By : @Zeko124 - @GipThon7 !\n- Hunting Log {trys2[0]}",
+                    f"- Done : @{username} !\n- By : @Zeko124 - @GibThon7 !\n- Hunting Log {trys2[0]}",
                 )
                 break
             except telethon.errors.rpcerrorlist.UsernameInvalidError:
@@ -214,7 +214,7 @@ async def _(event):
             ch = await jmub(
                 functions.channels.CreateChannelRequest(
                     title="GipThon HUNTER - صيد جبثون",
-                    about="This channel to hunt username by - @GipThon7 ",
+                    about="This channel to hunt username by - @GibThon7 ",
                 )
             )
             ch = ch.updates[1].channel_id
