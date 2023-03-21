@@ -124,7 +124,7 @@ async def _(event):
 الامر:  `.حالة التثبيت`
 • لمعرفة عدد المحاولات للصيد
 
-@VV744  - channle userbot 
+@GibThon7  - channle userbot 
 
 """
     )
@@ -143,8 +143,8 @@ async def hunterusername(event):
         try:
             ch = await jmub(
                 functions.channels.CreateChannelRequest(
-                    title="AKTHON HUNTER - صيد أكثون",
-                    about="This channel to hunt username by - @VV744 ",
+                    title="GipThon HUNTER - صيد جبثون",
+                    about="This channel to hunt username by - @GipThon7 ",
                 )
             )
             ch = ch.updates[1].channel_id
@@ -170,7 +170,7 @@ async def hunterusername(event):
                 )
                 await event.client.send_message(
                     event.chat_id,
-                    f"- Done : @{username} !\n- By : @MIMIM5 - @VV744 !\n- Hunting Log {trys2[0]}",
+                    f"- Done : @{username} !\n- By : @Zeko124 - @GipThon7 !\n- Hunting Log {trys2[0]}",
                 )
                 break
             except telethon.errors.rpcerrorlist.UsernameInvalidError:
@@ -213,8 +213,8 @@ async def _(event):
         try:
             ch = await jmub(
                 functions.channels.CreateChannelRequest(
-                    title="AKTHON HUNTER - صيد أكثون",
-                    about="This channel to hunt username by - @jmthon ",
+                    title="GipThon HUNTER - صيد جبثون",
+                    about="This channel to hunt username by - @GipThon7 ",
                 )
             )
             ch = ch.updates[1].channel_id
