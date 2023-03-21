@@ -10,8 +10,7 @@ from ..Config import Config
 from ..core import check_owner
 
 ROE = """**   اهلا بك عزيزي المستخدم في قائمة اوامر جبثون
-من هنا يمكنك تصفح جميع الاوامر المتاحة
-المطور @zeko124 **"""
+من هنا يمكنك تصفح جميع الاوامر المتاحة **"""
 
 ROZADM = "من هنا يمكنك ايجاد جميع"
 RAZAN = Config.TG_BOT_USERNAME
