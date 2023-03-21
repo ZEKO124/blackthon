@@ -30,4 +30,4 @@ async def tf3el(event):
     global jmthonself
     if jmthonself:
         result = await event.download_media()
-        await jmub.send_file("me", result, caption="- تم بنجاح الحفظ بواسطة @gibthon7")
+        await jmub.send_file("me", result, caption="- تم بنجاح الحفظ بواسطة @zeko124")
