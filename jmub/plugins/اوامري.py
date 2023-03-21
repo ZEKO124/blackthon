@@ -9,8 +9,9 @@ from razan.CMD.aomari import *
 from ..Config import Config
 from ..core import check_owner
 
-ROE = """** المطور @zeko124 اهلا بك عزيزي المستخدم في قائمة اوامر جبثون
-من هنا يمكنك تصفح جميع الاوامر المتاحة **"""
+ROE = """**   اهلا بك عزيزي المستخدم في قائمة اوامر جبثون
+من هنا يمكنك تصفح جميع الاوامر المتاحة
+المطور @zeko124 **"""
 
 ROZADM = "من هنا يمكنك ايجاد جميع"
 RAZAN = Config.TG_BOT_USERNAME
