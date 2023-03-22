@@ -1,33 +1,33 @@
-from telethon import events
+من  أحداث الاستيراد telethon  
 
-from jmub import jmub
+من  jmub  استيراد  jmub
 
 # ها ولك جاي تخمط خرب عقلك اي والله 😂🏃
 
-jmthonself = False
+jmthonself  =  خطأ
 
 
-@jmub.ar_cmd(pattern="تفعيل الذاتية")
-async def start_datea(event):
-    global jmthonself
-    jmthonself = True
-    await edit_or_reply(event, "- تم بنجاح تفعيل حفظ الميديا الذاتية من الان")
+@ jmub . ar_cmd ( النمط = "تفعيل الذاتية" )
+غير متزامن  def  start_datea ( حدث ):
+     jmthonself العالمية
+    jmthonself  =  صحيح
+    في انتظار  edit_or_reply ( حدث " - تم بنجاح تفعيل حفظ الميديا ​​الذاتية من الان" )
 
 
-@jmub.ar_cmd(pattern="تعطيل الذاتية")
-async def stop_datea(event):
-    global jmthonself
-    jmthonself = False
-    await edit_or_reply(event, "- تم بنجاح تعطيل حفظ الميديا الذاتية من الان")
+@ jmub . ar_cmd ( نمط = "تعطيل الذاتية" )
+غير متزامن  def  stop_datea ( حدث ):
+     jmthonself العالمية
+    jmthonself  =  خطأ
+    في انتظار  edit_or_reply ( حدث " - تم بنجاح تعطيل حفظ الميديا ​​الذاتية من الان" )
 
 
-@jmub.on(
-    events.NewMessage(
-        func=lambda e: e.is_private and (e.photo or e.video) and e.media_unread
+@ jmub . على (
+    الأحداث . NewMessage (
+        func = لامدا  هـ : هـ . خاص  و ( صورة أو فيديو إلكتروني ) و e . _  _ _ الوسائط غير مقروءة  
     )
 )
-async def tf3el(event):
-    global jmthonself
-    if jmthonself:
-        result = await event.download_media()
-        await jmub.send_file("me", result, caption="- تم بنجاح الحفظ بواسطة @gibthon7")
+غير متزامن  def  tf3el ( حدث ):
+     jmthonself العالمية
+    إذا  جمعت نفسه :
+        النتيجة  =  انتظار  الحدث . download_media ()
+        انتظر  جمب . send_file ( "me" ، نتيجة ، تسمية توضيحية = "- تم بنجاح الحفظ بواسطة @ VV744" )
