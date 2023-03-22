@@ -187,7 +187,7 @@ async def upstream(event):
             event, "**• عليك وضع فارات هيروكو المطلوبة للتحديث**"
         )
     try:
-        txt = "فشل في التحديث لسورس جبثون " + "**• حدث خطأ ما :**\n"
+        txt = "فشل في التحديث لسورس جمثون " + "**• حدث خطأ ما :**\n"
 
         repo = Repo()
     except NoSuchPathError as error:
@@ -227,7 +227,7 @@ async def upstream(event):
     # Special case for deploy
     if changelog == "" and not force_update:
         await event.edit(
-            "\n**• سورس جبثون محدث الى أخر اصدار**"
+            "\n**• سورس جمثون محدث الى أخر اصدار**"
             f"**\n الفـرع: {UPSTREAM_REPO_BRANCH}**\n"
         )
         return repo.__del__()
@@ -235,13 +235,13 @@ async def upstream(event):
         await print_changelogs(event, ac_br, changelog)
         await event.delete()
         return await event.respond(
-            f"**• ارسل** `{cmdhd}تحديث التنصيب` لتحديث سورس ن"
+            f"**• ارسل** `{cmdhd}تحديث التنصيب` لتحديث سورس جمثون"
         )
 
     if force_update:
         await event.edit("**• جار التحديث الاجباري الى اخر اصدار انتظر قليلا**")
     if conf == "الان":
-        await event.edit("**• جار تحديث سورس جبثون أنتظر قليلا**")
+        await event.edit("**• جار تحديث سورس جمثون أنتظر قليلا**")
         await update_bot(event, repo, ups_rem, ac_br)
     return
 
@@ -261,7 +261,7 @@ async def upstream(event):
             f"**• انت تستخدم التنصيب يدويا يرجى ارسال امر** `{cmdhd}تحديث الان`",
         )
     event = await edit_or_reply(event, "**- جار جلب ملفات السورس يرجى الانتظار قليلا**")
-    off_repo = "https://github.com/bbhh2/GIBTHON1"
+    off_repo = "https://github.com/jmthonr/temp"
     os.chdir("/app")
     try:
         txt = "**• لقد حدث خطأ اثناء التحديث**" + "**لقد حدث خطأ ما**\n"
