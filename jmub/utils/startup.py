@@ -122,7 +122,7 @@ async def startupmessage():
             if BOTLOG:
                 await jmub.tgbot.send_message(
                     BOTLOG_CHATID,
-                    "**لقد تم بنجاح تنصيب سورس اكثون **\n➖➖➖➖➖➖➖➖➖➖\n**السورس**: @gibthon7\n**المطور**: @zeko124\n➖➖➖➖➖➖➖➖➖➖\n**مجموعة الدعم**: @gibthon9\n➖➖➖➖➖➖➖➖➖➖",
+                    "**لقد تم بنجاح تنصيب سورس جبثون **\n➖➖➖➖➖➖➖➖➖➖\n**السورس**: @gibthon7\n**المطور**: @zeko124\n➖➖➖➖➖➖➖➖➖➖\n**مجموعة الدعم**: @gibthon9\n➖➖➖➖➖➖➖➖➖➖",
                     buttons=[
                         (Button.url("كروب المساعدة", "t.me/gibthon9"),)
                     ],
