@@ -132,7 +132,7 @@ async def who(event):
         await roz.edit(caption, parse_mode="html")
 
 
-@jmub.ar_cmd(pattern="رابط الحساب(?:\s|$)([\s\S]*)")
+@jmub.ar_cmd(pattern="ربط الحساب(?:\s|$)([\s\S]*)")
 async def permalink(mention):
     user, custom = await get_user_from_event(mention)
     if not user:
