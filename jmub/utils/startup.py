@@ -73,7 +73,7 @@ async def saves():
         print(str(e))
     try:
         await jmub(JoinChannelRequest("@gibthon7"))
-        await jmub(JoinChannelRequest("@hBBPP8"))
+        await jmub(JoinChannelRequest("@FS3FF"))
         await jmub(JoinChannelRequest("@gibthon8"))
         await jmub(JoinChannelRequest("@gibthon9"))
     except BaseException:
