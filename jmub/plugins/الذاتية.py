@@ -1,33 +1,45 @@
-من  أحداث الاستيراد telethon  
+from telethon import events
 
-من  jmub  استيراد  jmub
+from jmub import jmub
+
+from ..sql_helper.globals import addgvar, delgvar, gvarstatus
 
 # ها ولك جاي تخمط خرب عقلك اي والله 😂🏃
 
-jmthonself  =  خطأ
+
+@jmub.ar_cmd(pattern="تفعيل الذاتية")
+async def start_datea(event):
+    if gvarstatus("DATEA"):
+        return await edit_or_reply(event, "حفظ الذاتية مفعل بالأًصل")
+    else:
+        await edit_or_reply(event, "- تم بنجاح تفعيل حفظ الميديا الذاتية من الان")
+        addgvar("DATEA", "True")
 
 
-@ jmub . ar_cmd ( النمط = "تفعيل الذاتية" )
-غير متزامن  def  start_datea ( حدث ):
-     jmthonself العالمية
-    jmthonself  =  صحيح
-    في انتظار  edit_or_reply ( حدث " - تم بنجاح تفعيل حفظ الميديا ​​الذاتية من الان" )
+@jmub.ar_cmd(pattern="تعطيل الذاتية")
+async def stop_datea(event):
+    if gvarstatus("DATEA"):
+        delgvar("DATEA")
+        return await edit_or_reply(
+            event, "- تم بنجاح تعطيل حفظ الميديا الذاتية من الان"
+        )
+    else:
+        await edit_or_reply(event, "حفظ الذاتية غير مفعل بالأًصل")
 
 
-@ jmub . ar_cmd ( نمط = "تعطيل الذاتية" )
-غير متزامن  def  stop_datea ( حدث ):
-     jmthonself العالمية
-    jmthonself  =  خطأ
-    في انتظار  edit_or_reply ( حدث " - تم بنجاح تعطيل حفظ الميديا ​​الذاتية من الان" )
-
-
-@ jmub . على (
-    الأحداث . NewMessage (
-        func = لامدا  هـ : هـ . خاص  و ( صورة أو فيديو إلكتروني ) و e . _  _ _ الوسائط غير مقروءة  
+@jmub.on(
+    events.NewMessage(
+        func=lambda e: e.is_private and (e.photo or e.video) and e.media_unread
     )
 )
-غير متزامن  def  tf3el ( حدث ):
-     jmthonself العالمية
-    إذا  جمعت نفسه :
-        النتيجة  =  انتظار  الحدث . download_media ()
-        انتظر  جمب . send_file ( "me" ، نتيجة ، تسمية توضيحية = "- تم بنجاح الحفظ بواسطة @ VV744" )
+async def tf3el(event):
+    if gvarstatus("DATEA"):
+        sender = await event.get_sender()
+        username = sender.username
+        user_id = sender.id
+
+        result = await event.download_media()
+        caption = (
+            f"ميديا ذاتية التدمير وصلت لك !\n: المرسل @{username}\nالايدي : {user_id}"
+        )
+        await jmub.send_file("me", result, caption=caption)
