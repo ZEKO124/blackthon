@@ -80,7 +80,7 @@ async def _(event):
         event, f"**⌔∮ حسنا تم ايقاف البوت لمده {counter} ثواني**"
     )
     sleep(counter)
-    await event.edit("**⪼ اهلا الان اشتغل بشكل طبيعي**")
+    await event.edit("**⪼ ها اضلعي اشتغلت طبيعي**")
 
 
 @jmub.ar_cmd(pattern="الاشعارات (تشغيل|ايقاف)$")
