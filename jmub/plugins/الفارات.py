@@ -19,7 +19,7 @@ HEROKU_APP_NAME = Config.HEROKU_APP_NAME
 HEROKU_API_KEY = Config.HEROKU_API_KEY
 
 
-@jmub.ar_cmd(pattern="وضع (.*)")
+@jmub.ar_cmd(pattern="اضف (.*)")
 async def variable(var):
     if Config.HEROKU_API_KEY is None:
         return await edit_delete(
