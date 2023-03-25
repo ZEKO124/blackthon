@@ -36,7 +36,7 @@ async def amireallyalive(event):
     ms = (end - start).microseconds / 1000
     _, check_sgnirts = check_data_base_heal_th()
     EMOJI = gvarstatus("ALIVE_EMOJI") or "  - "
-    ALIVE_TEXT = gvarstatus("ALIVE_TEXT") or "**سورس جبثون يعمل بنجاح**"
+    ALIVE_TEXT = gvarstatus("ALIVE_TEXT") or "**سورس بلاكثون يعمل بنجاح**"
     JMTHON_IMG = gvarstatus("ALIVE_PIC")
     caption = jmthon_caption.format(
         ALIVE_TEXT=ALIVE_TEXT,
@@ -73,7 +73,7 @@ async def amireallyalive(event):
 temp = """{ALIVE_TEXT}
 **{EMOJI} قاعدة البيانات :** `{dbhealth}`
 **{EMOJI} اصدار التيليثون:** `{telever}`
-**{EMOJI} اصدار جبثون :** `{jmver}`
+**{EMOJI} اصدار البلاكثون :** `{jmver}`
 **{EMOJI} اصدار البايثون :** `{pyver}`
 **{EMOJI} الوقت :** `{uptime}`
 **{EMOJI} المالك:** {mention}"""
@@ -81,9 +81,9 @@ temp = """{ALIVE_TEXT}
 
 def jmthonalive_text():
     EMOJI = gvarstatus("ALIVE_EMOJI") or "  ✥ "
-    jmthon_caption = "**سورس جبثون يعمل بنجاح**\n"
+    jmthon_caption = "**سورس بلاكثون يعمل بنجاح**\n"
     jmthon_caption += f"**{EMOJI} اصدار التيليثون :** `{version.__version__}\n`"
-    jmthon_caption += f"**{EMOJI} اصدار أكثون :** `{jmthonversion}`\n"
+    jmthon_caption += f"**{EMOJI} اصدار بلاكثون :** `{jmthonversion}`\n"
     jmthon_caption += f"**{EMOJI} اصدار البايثون :** `{python_version()}\n`"
     jmthon_caption += f"**{EMOJI} المالك:** {mention}\n"
     return jmthon_caption
@@ -102,9 +102,9 @@ async def repo(event):
 ROZ_PIC = ""
 RAZAN = Config.TG_BOT_USERNAME
 ROZ_T = (
-    f"**⌯︙بوت جبثـون يعمل بنجاح 🤍،**\n"
+    f"**⌯︙بوت بلاكثون يعمل بنجاح 🤍،**\n"
     f"**   - اصدار التليثون :** `1.23.0\n`"
-    f"**   - اصدار جبثون :** `4.0.0`\n"
+    f"**   - اصدار بلاكثون :** `4.0.0`\n"
     f"**   - البوت المستخدم :** `{RAZAN}`\n"
     f"**   - اصدار البايثون :** `3.9.6\n`"
     f"**   - المستخدم :** {mention}\n"
@@ -147,4 +147,4 @@ if Config.TG_BOT_USERNAME is not None and tgbot is not None:
             await event.answer([result] if result else None)
 
 
-# edit by ~ @RR77R
+# edit by ~ @zeko124
