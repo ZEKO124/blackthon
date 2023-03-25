@@ -34,9 +34,9 @@ name_dl = (
 
 async def yt_search(jmthon):
     try:
-        jmthon = urllib.parse.quote(jmthon)
+        Blackthon = urllib.parse.quote(Blackthon)
         html = urllib.request.urlopen(
-            f"https://www.youtube.com/results?search_query={jmthon}"
+            f"https://www.youtube.com/results?search_query={Blackthon}"
         )
 
         user_data = re.findall(r"watch\?v=(\S{11})", html.read().decode())
@@ -91,8 +91,8 @@ class YT_Search_X:
 ytsearch_data = YT_Search_X()
 
 """
-async def yt_data(jmthon):
-    params = {"format": "json", "url": jmthon}
+async def yt_data(Blackthon):
+    params = {"format": "json", "url": Blackthon}
     url = "https://www.youtube.com/oembed"  # https://stackoverflow.com/questions/29069444/returning-the-urls-as-a-list-from-a-youtube-search-query
     query_string = urllib.parse.urlencode(params)
     url = f"{url}?{query_string}"
