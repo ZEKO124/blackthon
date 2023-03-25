@@ -71,9 +71,9 @@ async def startup_process():
             LOGS.info(str(e))
             return
     else:
-        LOGS.info("انت لا يمكنك تنصيب سورس جبثون عزيزي دي")
-        LOGS.info("انت لا يمكنك تنصيب سورس جبثون عزيزي دي")
-        LOGS.info("انت لا يمكنك تنصيب سورس جبثون عزيزي دي")
+        LOGS.info("انت لا يمكنك تنصيب سورس بلاكثون عزيزي دي")
+        LOGS.info("انت لا يمكنك تنصيب سورس بلاكثون عزيزي دي")
+        LOGS.info("انت لا يمكنك تنصيب سورس بلاكثون عزيزي دي")
 
 
 jmub.loop.run_until_complete(startup_process())
