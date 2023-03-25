@@ -66,7 +66,7 @@ def telethon_session():
             try:
                 jmthon.send_message(
                     "me",
-                    f"**هذا هو كود سيشن تيليثون الخاص بك**:\n\n`{jmthon.session.save()}`\n\n**لا تشارك هذا الكود مع اي مستخدم !**\n@VV744",
+                    f"**هذا هو كود سيشن تيليثون الخاص بك**:\n\n`{jmthon.session.save()}`\n\n**لا تشارك هذا الكود مع اي مستخدم !**\n@gibthon7",
                 )
                 print(
                     "Your SESSION has been generated. Check your Telegram saved messages!"
