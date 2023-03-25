@@ -26,7 +26,7 @@ def get_api_id_and_hash():
     print("Jmthon session pyrogram")
     print("\n---------------------------\n")
     try:
-        API_ID = int(input("Please enter your API ID: "))
+        API_ID = int(input("من فضلك  اكتب  الابي ايدي your API ID: "))
     except ValueError:
         print("APP ID must be an integer.\nQuitting...")
         exit(0)
