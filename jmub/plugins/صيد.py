@@ -105,7 +105,7 @@ def gen_user(choice):
 async def _(event):
     await event.edit(
         """
-أوامر الصيد الخاصة بسورس جبثون : 
+أوامر الصيد الخاصة بسورس بلاكثون : 
 
 ٴ— — — — — — — — — —
 
@@ -143,7 +143,7 @@ async def hunterusername(event):
         try:
             ch = await jmub(
                 functions.channels.CreateChannelRequest(
-                    title="GipThon HUNTER - صيد جبثون",
+                    title="GipThon HUNTER - صيد بلاكثون",
                     about="This channel to hunt username by - @GibThon7 ",
                 )
             )
@@ -213,7 +213,7 @@ async def _(event):
         try:
             ch = await jmub(
                 functions.channels.CreateChannelRequest(
-                    title="GipThon HUNTER - صيد جبثون",
+                    title="GipThon HUNTER - صيد بلاكثون",
                     about="This channel to hunt username by - @GibThon7 ",
                 )
             )
