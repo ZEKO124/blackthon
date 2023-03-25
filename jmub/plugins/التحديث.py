@@ -1,16 +1,4 @@
 import asyncio
-import contextlib
-import os
-import sys
-from asyncio.exceptions import CancelledError
-
-import heroku3
-import urllib3
-from git import Repo
-from git.exc import GitCommandError, InvalidGitRepositoryError, NoSuchPathError
-
-from jmub import HEROKU_APP, UPSTREAM_REPO_URL, jmub
-
 from ..Config import Config
 from ..core.logger import logging
 from ..core.managers import edit_delete, edit_or_reply
