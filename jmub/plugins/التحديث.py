@@ -153,7 +153,7 @@ async def upstream(event):
                 f"`Unfortunately, the directory {error} "
                 "does not seem to be a git repository.\n"
                 "But we can fix that by force updating the userbot using "
-                ".تحديث الان.`"
+                ".تحديث .`"
             )
         repo = Repo.init()
         origin = repo.create_remote("upstream", off_repo)
@@ -189,14 +189,14 @@ async def upstream(event):
         await print_changelogs(event, ac_br, changelog)
         await event.delete()
         return await event.respond(
-            f"⌔ :  لتحديث سورس الجوكر ارسل : `.تحديث الان` "
+            f"⌔ :  لتحديث سورس الجوكر ارسل : `.تحديث ` "
         )
 
     if force_update:
         await event.edit(
             "`Force-Syncing to latest stable userbot code, please wait...`"
         )
-    if conf == "الان":
+    if conf == "تحديث":
         await event.edit("** ᯽︙ جار تحـديـث سـورس الجوكر انـتـظـر قـليـلا 🔨**")
         await update(event, repo, ups_rem, ac_br)
     return
