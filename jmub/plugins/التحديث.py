@@ -128,7 +128,7 @@ async def deploy(event, repo, ups_rem, ac_br, txt):
         await event.edit(f"{txt}\n" "**• خطأ في التعرف على تطبيق هيروكو**")
         return repo.__del__()
     jmthon = await event.edit(
-        "**• جار اعادة تشغيل الدينو الان يرجى الانتظار من 2-5 دقائق**"
+        "**• جار اعادة تشغيل السورس للتحديث الى اخر اصدار الان يرجى الانتظار من 2-5 دقائق**"
     )
     try:
         ulist = get_collectionlist_items()
@@ -199,7 +199,7 @@ async def upstream(event):
     except InvalidGitRepositoryError as error:
         if conf is None:
             return await event.edit(
-                f"**• للأسف المجلد {error} لا يبدة انه خاص لسورس معين.\nيمكنك اصلاح هذه المشكلة بأرسال. `.تحديث التنصيب`"
+                f"**• للأسف المجلد {error} لا يبدة انه خاص لسورس معين.\nيمكنك اصلاح هذه المشكلة بأرسال. `.تحديث `"
             )
 
         repo = Repo.init()
@@ -227,7 +227,7 @@ async def upstream(event):
     # Special case for deploy
     if changelog == "" and not force_update:
         await event.edit(
-            "\n**• سورس جمثون محدث الى أخر اصدار**"
+            "\n**• سورس بلاكثون محدث الى أخر اصدار**"
             f"**\n الفـرع: {UPSTREAM_REPO_BRANCH}**\n"
         )
         return repo.__del__()
@@ -235,7 +235,7 @@ async def upstream(event):
         await print_changelogs(event, ac_br, changelog)
         await event.delete()
         return await event.respond(
-            f"**• ارسل** `{cmdhd}تحديث التنصيب` لتحديث سورس جمثون"
+            f"**• ارسل** `{cmdhd}تحديث` لتحديث سورس بلاكثون"
         )
 
     if force_update:
@@ -247,7 +247,7 @@ async def upstream(event):
 
 
 @jmub.ar_cmd(
-    pattern="تحديث التنصيب$",
+    pattern="تحديث $",
 )
 async def upstream(event):
     if ENV:
