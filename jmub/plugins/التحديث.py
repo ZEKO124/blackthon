@@ -187,7 +187,7 @@ async def upstream(event):
             event, "**• عليك وضع فارات هيروكو المطلوبة للتحديث**"
         )
     try:
-        txt = "فشل في التحديث لسورس جمثون " + "**• حدث خطأ ما :**\n"
+        txt = "فشل في التحديث لسورس بلاكثون " + "**• حدث خطأ ما :**\n"
 
         repo = Repo()
     except NoSuchPathError as error:
@@ -241,7 +241,7 @@ async def upstream(event):
     if force_update:
         await event.edit("**• جار التحديث الاجباري الى اخر اصدار انتظر قليلا**")
     if conf == "الان":
-        await event.edit("**• جار تحديث سورس جمثون أنتظر قليلا**")
+        await event.edit("**• جار تحديث سورس بلاكثون أنتظر قليلا**")
         await update_bot(event, repo, ups_rem, ac_br)
     return
 
@@ -260,8 +260,8 @@ async def upstream(event):
             event,
             f"**• انت تستخدم التنصيب يدويا يرجى ارسال امر** `{cmdhd}تحديث الان`",
         )
-    event = await edit_or_reply(event, "**- جار جلب ملفات السورس يرجى الانتظار قليلا**")
-    off_repo = "https://github.com/jmthonr/temp"
+    event = await edit_or_reply(event, "**- جار جلب ملفات السورس يرجى الانتظار قليلا**"
+    off_repo = "https://github.com/ZEKO124/gibthon/temp"
     os.chdir("/app")
     try:
         txt = "**• لقد حدث خطأ اثناء التحديث**" + "**لقد حدث خطأ ما**\n"
