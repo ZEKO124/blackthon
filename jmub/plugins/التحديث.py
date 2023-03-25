@@ -115,7 +115,7 @@ async def deploy(event, repo, ups_rem, ac_br, txt):
     heroku_applications = heroku.apps()
     if HEROKU_APP_NAME is None:
         await event.edit(
-            "**• يرجى وضع فار HEROKU_APP_NAME**" " لتتمكن من تحديث السورس "
+            "**• يرجى وضع فار HEROKU_APP_NAME**" " لتمكن من تحديث السورس "
         )
         repo.__del__()
         return
