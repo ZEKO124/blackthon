@@ -328,7 +328,7 @@ async def verifyLoggerGroup():
         descript = "⪼ هذه هي مجموعه الحفظ الخاصه بك لا تحذفها ابدا  𓆰."
         photobt = await jmub.upload_file(file="razan/pic/gibthon.jpg")
         _, groupid = await create_supergroup(
-            "كروب بوت جبثون", jmub, Config.TG_BOT_USERNAME, descript, photobt
+            "كروب بوت بلاكثون", jmub, Config.TG_BOT_USERNAME, descript, photobt
         )
         addgvar("PRIVATE_GROUP_BOT_API_ID", groupid)
         print("تم انشاء كروب الحفظ بنجاح")
@@ -353,7 +353,7 @@ async def verifyLoggerGroup():
         descript = "❃ لا تحذف او تغادر المجموعه وظيفتها حفظ رسائل التي تأتي على الخاص"
         photobt = await jmub.upload_file(file="razan/pic/gibthon2.jpg")
         _, groupid = await create_supergroup(
-            "مجموعة التخزين", jmub, Config.TG_BOT_USERNAME, descript, photobt
+            " مجموعة التخزين بلاكثون", jmub, Config.TG_BOT_USERNAME, descript, photobt
         )
         addgvar("PM_LOGGER_GROUP_ID", groupid)
         print("تم عمل الكروب التخزين بنجاح واضافة الفارات اليه.")
