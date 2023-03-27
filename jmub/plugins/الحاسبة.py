@@ -5,7 +5,7 @@ from telethon.events import CallbackQuery, InlineQuery
 
 from jmub import jmub
 
-# 𝗧𝗲𝗹𝗲𝗚𝗿𝗮𝗠 : @jmub  ~ @RR7PP
+# 𝗧𝗲𝗹𝗲𝗚𝗿𝗮𝗠 : @gibthon7  ~ @zeko124
 from ..core.decorators import check_owner
 
 CALC = {}
@@ -57,12 +57,12 @@ async def inlinecalc(event):
     ) and string == "calc":
         event.builder
         calc = event.builder.article(
-            "Calc", text="**الحاسبة العلمية لسورس جبثون\n @jmub**", buttons=lst
+            "Calc", text="**الحاسبة العلمية لسورس بلاكثون\n @jmub**", buttons=lst
         )
         await event.answer([calc])
 
 
-# 𝗧𝗲𝗹𝗲𝗚𝗿𝗮𝗠 : @jmub  ~ @RR7PP
+# 𝗧𝗲𝗹𝗲𝗚𝗿𝗮𝗠 : @gibthon7  ~ @zeko124
 @jmub.tgbot.on(CallbackQuery(data=re.compile(b"calc(.*)")))
 @check_owner
 async def _(e):  # sourcery no-metrics
@@ -73,7 +73,7 @@ async def _(e):  # sourcery no-metrics
         if CALC.get(user):
             CALC.pop(user)
         await e.edit(
-            "**الحاسبة العلمية لسورس جبثون\n @jmub**",
+            "**الحاسبة العلمية لسورس بلاكثون\n @jmub**",
             buttons=[Button.inline("افتح مره اخرى", data="recalc")],
         )
     elif x == "C":
@@ -128,7 +128,7 @@ async def _(e):  # sourcery no-metrics
         await e.answer(str(x))
 
 
-# 𝗧𝗲𝗹𝗲𝗚𝗿𝗮𝗠 : @jmub  ~ @RR7PP
+# 𝗧𝗲𝗹𝗲𝗚𝗿𝗮𝗠 : @ @gibthon7 ~ @zeko124
 @jmub.tgbot.on(CallbackQuery(data=re.compile(b"recalc")))
 @check_owner
 async def _(e):
@@ -157,4 +157,4 @@ async def _(e):
     tultd = [Button.inline(f"{x}", data=f"calc{x}") for x in m]
     lst = list(zip(tultd[::4], tultd[1::4], tultd[2::4], tultd[3::4]))
     lst.append([Button.inline("=", data="calc=")])
-    await e.edit("**الحاسبة العلمية لسورس جبثون\n @jmub**", buttons=lst)
+    await e.edit("**الحاسبة العلمية لسورس بلاكثون\n @jmub**", buttons=lst)
