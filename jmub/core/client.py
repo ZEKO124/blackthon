@@ -338,14 +338,14 @@ class JmthonClient(TelegramClient):
         self.running_processes.clear()
 
 
-  BlackthonClient.fast_download_file = download_file
-  BlackthonClient.fast_upload_file = upload_file
-  BlackthonClient.reload = restart_script
-  BlackthonClient.get_msg_link = get_message_link
-  BlackthonClient.check_testcases = checking
+  JMTHONClient.fast_download_file = download_file
+  JMTHONClient.fast_upload_file = upload_file
+  JMTHONClient.reload = restart_script
+  JMTHONClient.get_msg_link = get_message_link
+  JMTHONClient.check_testcases = checking
 try:
     send_message_check = TelegramClient.send_message
 except AttributeError:
-   BlackthonClient.send_message = send_message
-    BlackthonClient.send_file = send_file
-      BlackthonClient.edit_message = edit_message
+   JMTHONClient.send_message = send_message
+    JMTHONClient.send_file = send_file
+      JMTHONClient.edit_message = edit_message
