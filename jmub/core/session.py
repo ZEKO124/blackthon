@@ -4,7 +4,7 @@ from telethon.network.connection.tcpabridged import ConnectionTcpAbridged
 
 from ..Config import Config
 from .bothseesion import bothseesion
-from .client import JMTHONClient
+from .client import CatUserBotClient
 from .logger import logging
 
 LOGS = logging.getLogger("سورس بلاكثون")
