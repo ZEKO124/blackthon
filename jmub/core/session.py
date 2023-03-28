@@ -4,7 +4,7 @@ from telethon.network.connection.tcpabridged import ConnectionTcpAbridged
 
 from ..Config import Config
 from .bothseesion import bothseesion
-from .client import JmthonClient
+from .client import blackthonClient
 from .logger import logging
 
 LOGS = logging.getLogger("سورس بلاكثون")
@@ -15,7 +15,7 @@ loop = None
 if Config.STRING_SESSION:
     session = bothseesion(Config.STRING_SESSION, LOGS)
 else:
-    session = "jmthon"
+    session = "Blackthon"
 
 try:
     jmub = JmthonClient(
@@ -35,7 +35,7 @@ except Exception as e:
     sys.exit()
 
 jmub.tgbot = tgbot = JmthonClient(
-    session="jmthonTgbot",
+    session="BlackthonTgbot",
     api_id=Config.APP_ID,
     api_hash=Config.API_HASH,
     loop=loop,
