@@ -16,14 +16,14 @@ async def _(event):
     await jmub.send_message("@t06bot", "/start")
     await asyncio.sleep(2)
     msg0 = await jmub.get_messages("@t06bot", limit=1)
-    await msg0[0].click(1)
+    await msg0[0].click(3)
     await asyncio.sleep(2)
     msg1 = await jmub.get_messages("@t06bot", limit=1)
     await msg1[0].click(0)
 
     chs = 1
     for i in range(100):
-        await asyncio.sleep(3)
+        await asyncio.sleep(2)
         list = await jmub(
             GetHistoryRequest(
                 peer=channel_entity,
