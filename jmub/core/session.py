@@ -15,7 +15,7 @@ loop = None
 if Config.STRING_SESSION:
     session = bothseesion(Config.STRING_SESSION, LOGS)
 else:
-    session = "JMTHON"
+    session = "catuserbot"
 
 try:
     jmub = JmthonClient(
@@ -35,7 +35,7 @@ except Exception as e:
     sys.exit()
 
 jmub.tgbot = tgbot = JmthonClient(
-    session="JMTHONgbot",
+    session="CatTgbot",
     api_id=Config.APP_ID,
     api_hash=Config.API_HASH,
     loop=loop,
