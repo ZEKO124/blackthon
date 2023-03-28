@@ -51,8 +51,7 @@ async def _(event):
                 break
         await jepiq.send_message(event.chat_id, "**تم الانتهاء من التجميع !**")
 
-    else:
-        await event.edit("يجب الدفع لاستعمال هذا الامر !")
+ 
 
 # t.me/r0r77
 @jmub.ar_cmd(pattern="بخشيش وعد (.*)")
