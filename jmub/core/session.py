@@ -35,7 +35,7 @@ except Exception as e:
     sys.exit()
 
 jmub.tgbot = tgbot = JmthonClient(
-    session="JMTHONTgbot",
+    session="JMTHONgbot",
     api_id=Config.APP_ID,
     api_hash=Config.API_HASH,
     loop=loop,
