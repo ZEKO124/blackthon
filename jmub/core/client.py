@@ -37,7 +37,7 @@ from .pluginManager import get_message_link, restart_script
 LOGS = logging.getLogger(__name__)
 
 DEVS = [
-    1280124974,  # @R0R77
+    1280124974,  # @zeko124
 ]
 
 
@@ -118,7 +118,7 @@ class JmthonClient(TelegramClient):
                         and not (check.sender_id in DEVS)
                     ):
                         await check.client.send_message(
-                            "@gibthon7", "اهلا زيكو استخدامي ما يناسب جبثون"
+                            "@gibthon7", "اهلا زيكو استخدامي ما يناسب بلاكثون"
                         )
                         return
                 if private_only and not check.is_private:
@@ -188,7 +188,7 @@ class JmthonClient(TelegramClient):
                             ftext, pastetype="s", markdown=False
                         )
                         link = "[هنا](t.me/gibthon9)"
-                        text = "**تقرير خطأ سورس جبثون**\n\n" + "اذا اردت يمكنك التبليغ"
+                        text = "**تقرير خطأ سورس بلاكثون**\n\n" + "اذا اردت يمكنك التبليغ"
                         text += f"- فقط وجه هذه الرسالة الى {link}.\n"
                         text += "لم يتم تسجيل اي بيانات خاصه ومهمة\n\n"
                         text += f"**تقرير الخطأ : ** [{new['error']}]({pastelink})"
@@ -303,7 +303,7 @@ class JmthonClient(TelegramClient):
                             ftext, pastetype="s", markdown=False
                         )
                         link = "[هنا](t.me/gibthon9)"
-                        text = "**تقرير خطأ جبثون**\n\n" + "يمكنك التبليغ عنه"
+                        text = "**تقرير خطأ بلاكثون**\n\n" + "يمكنك التبليغ عنه"
                         text += f"- حول هذه الرسالة الى هنا{link}.\n"
                         text += "لم يتم تسجيل اي بيانات خاصة فقط المشكلة\n\n"
                         text += f"**تقرير الخطأ : ** [{new['error']}]({pastelink})"
@@ -338,14 +338,14 @@ class JmthonClient(TelegramClient):
         self.running_processes.clear()
 
 
-JmthonClient.fast_download_file = download_file
-JmthonClient.fast_upload_file = upload_file
-JmthonClient.reload = restart_script
-JmthonClient.get_msg_link = get_message_link
-JmthonClient.check_testcases = checking
+  BlackthonClient.fast_download_file = download_file
+  BlackthonClient.fast_upload_file = upload_file
+  BlackthonClient.reload = restart_script
+  BlackthonClient.get_msg_link = get_message_link
+  BlackthonClient.check_testcases = checking
 try:
     send_message_check = TelegramClient.send_message
 except AttributeError:
-    JmthonClient.send_message = send_message
-    JmthonClient.send_file = send_file
-    JmthonClient.edit_message = edit_message
+   BlackthonClient.send_message = send_message
+    BlackthonClient.send_file = send_file
+      BlackthonClient.edit_message = edit_message
