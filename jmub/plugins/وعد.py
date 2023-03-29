@@ -23,7 +23,7 @@ async def _(event):
 
     chs = 1
     for i in range(100):
-        await asyncio.sleep(3)
+        await asyncio.sleep(5)
         list = await jmub(
             GetHistoryRequest(
                 peer=channel_entity,
@@ -67,7 +67,7 @@ async def _(event):
 
  
 
-# t.me/r0r77
+# t.me/zeko124
 @jmub.ar_cmd(pattern="بخشيش وعد (.*)")
 async def baqshis(event):
     for i in range(int("".join(event.text.split(maxsplit=2)[2:]).split(" ", 2)[0])):
