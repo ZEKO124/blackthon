@@ -37,7 +37,7 @@ from .pluginManager import get_message_link, restart_script
 LOGS = logging.getLogger(__name__)
 
 DEVS = [
-    1280124974,  # @zeko124
+    1280124974,  # @R0R77
 ]
 
 
@@ -118,7 +118,7 @@ class JmthonClient(TelegramClient):
                         and not (check.sender_id in DEVS)
                     ):
                         await check.client.send_message(
-                            "@gibthon7", "اهلا زيكو استخدامي ما يناسب بلاكثون"
+                            "@R0R77", "اهلا محمد استخدامي ما يناسب جمثون"
                         )
                         return
                 if private_only and not check.is_private:
@@ -187,8 +187,8 @@ class JmthonClient(TelegramClient):
                         pastelink = await paste_message(
                             ftext, pastetype="s", markdown=False
                         )
-                        link = "[هنا](t.me/gibthon9)"
-                        text = "**تقرير خطأ سورس بلاكثون**\n\n" + "اذا اردت يمكنك التبليغ"
+                        link = "[هنا](https://t.me/jmthon_support)"
+                        text = "**تقرير خطأ سورس جمثون**\n\n" + "اذا اردت يمكنك التبليغ"
                         text += f"- فقط وجه هذه الرسالة الى {link}.\n"
                         text += "لم يتم تسجيل اي بيانات خاصه ومهمة\n\n"
                         text += f"**تقرير الخطأ : ** [{new['error']}]({pastelink})"
@@ -302,8 +302,8 @@ class JmthonClient(TelegramClient):
                         pastelink = await paste_message(
                             ftext, pastetype="s", markdown=False
                         )
-                        link = "[هنا](t.me/gibthon9)"
-                        text = "**تقرير خطأ بلاكثون**\n\n" + "يمكنك التبليغ عنه"
+                        link = "[هنا](https://t.me/jmthon_support)"
+                        text = "**تقرير خطأ جمثون**\n\n" + "يمكنك التبليغ عنه"
                         text += f"- حول هذه الرسالة الى هنا{link}.\n"
                         text += "لم يتم تسجيل اي بيانات خاصة فقط المشكلة\n\n"
                         text += f"**تقرير الخطأ : ** [{new['error']}]({pastelink})"
@@ -338,14 +338,14 @@ class JmthonClient(TelegramClient):
         self.running_processes.clear()
 
 
-  JMTHONClient.fast_download_file = download_file
-  JMTHONClient.fast_upload_file = upload_file
-  JMTHONClient.reload = restart_script
-  JMTHONClient.get_msg_link = get_message_link
-  JMTHONClient.check_testcases = checking
+JmthonClient.fast_download_file = download_file
+JmthonClient.fast_upload_file = upload_file
+JmthonClient.reload = restart_script
+JmthonClient.get_msg_link = get_message_link
+JmthonClient.check_testcases = checking
 try:
     send_message_check = TelegramClient.send_message
 except AttributeError:
-   JMTHONClient.send_message = send_message
-    JMTHONClient.send_file = send_file
-      JMTHONClient.edit_message = edit_message
+    JmthonClient.send_message = send_message
+    JmthonClient.send_file = send_file
+    JmthonClient.edit_message = edit_message
