@@ -15,7 +15,7 @@ bot_username = '@t06bot'
 async def _(event):
     if jmub[0] == "yes":
         await event.edit("**᯽︙سيتم تجميع النقاط , قبل كل شي تأكد من انك قمت بلانظمام الى القنوات الاشتراك الاجباري للبوت لعدم حدوث اخطاء**")
-        channel_entity = await jepiq.get_entity(bot_username)
+        channel_entity = await jmub.get_entity(bot_username)
         await jmub.send_message('@t06bot', '/start')
         await asyncio.sleep(5)
         msg0 = await jepiq.get_messages('@t06bot', limit=1)
@@ -46,7 +46,7 @@ async def _(event):
                 msg2 = await jmub.get_messages('@t06bot', limit=1)
                 await msg2[0].click(text='تحقق')
                 chs += 1
-                await jepiq.send_message("me", f"تم الاشتراك في {chs} قناة")
+                await jmub.send_message("me", f"تم الاشتراك في {chs} قناة")
             except:
                 await jmub.send_message(event.chat_id, f"**خطأ , ممكن تبندت**")
                 break
