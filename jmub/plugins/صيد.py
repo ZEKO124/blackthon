@@ -1,4 +1,4 @@
-# by: t.me/Dar4k  ~ t.me/R0R77
+# by: t.me/zeko124
 
 import asyncio
 import random
@@ -111,26 +111,23 @@ async def _(event):
 
 النوع :(  سداسي حرفين/ ثلاثيات/ سداسيات/ بوتات/ خماسي حرفين/خماسي /سباعيات )
 
-الامر:  `.صيد` + النوع
+الامر:  .صيد + النوع
 - يقوم بصيد معرفات عشوائية حسب النوع
 
-الامر:  `تثبيت` + معرف
+الامر:  تثبيت + معرف
 * وظيفة الامر : يقوم بالتثبيت على المعرف عندما يصبح متاح يأخذه
 
 ٴ— — — — — — — — — —
-الامر:   `.حالة الصيد`
+الامر:   .حالة الصيد
 • لمعرفة عدد المحاولات للصيد
 
-الامر:  `.حالة التثبيت`
+الامر:  .حالة التثبيت
 • لمعرفة عدد المحاولات للصيد
 
 @GibThon7  - channle userbot 
 
 """
-    )
-
-
-@jmub.ar_cmd(pattern="صيد (.*)")
+    )@jmub.ar_cmd(pattern="صيد (.*)")
 async def hunterusername(event):
     msg = event.text.split()
     choice = str(msg[1])
@@ -148,17 +145,17 @@ async def hunterusername(event):
                 )
             )
             ch = ch.updates[1].channel_id
-            await event.edit(f"**- تم تفعيل الصيد بنجاح الان**")
+            await event.edit(f"- تم تفعيل الصيد بنجاح الان")
         except Exception as e:
             await jmub.send_message(
-                event.chat_id, f"خطأ في انشاء القناة , الخطأ**-  : {str(e)}**"
+                event.chat_id, f"خطأ في انشاء القناة , الخطأ**-  : {str(e)}"
             )
     isclaim.clear()
     isclaim.append("on")
     for i in range(19000000):
         username = gen_user(choice)
         if username == "error":
-            await event.edit("**- يرجى وضع النوع بشكل صحيح**.")
+            await event.edit("- يرجى وضع النوع بشكل صحيح**.")
             break
         isav = check_user(username)
         if isav == True:
@@ -181,9 +178,9 @@ async def hunterusername(event):
             except telethon.errors.FloodError as e:
                 await jmub.send_message(
                     event.chat_id,
-                    f"للاسف تبندت , مدة الباند**-  ({e.seconds}) ثانية .**",
+                    f"للاسف تبندت , مدة الباند**-  ({e.seconds}) ثانية .",
                     event.chat_id,
-                    f"للاسف تبندت , مدة الباند**-  ({e.seconds}) ثانية .**",
+                    f"للاسف تبندت , مدة الباند-  ({e.seconds}) ثانية .",
                 )
                 break
             except Exception as eee:
@@ -200,7 +197,7 @@ async def hunterusername(event):
         trys[0] += 1
     isclaim.clear()
     isclaim.append("off")
-    await event.client.send_message(event.chat_id, "**- تم بنجاح الانتهاء من الصيد**")
+    await event.client.send_message(event.chat_id, "- تم بنجاح الانتهاء من الصيد**")
 
 
 @jmub.ar_cmd(pattern="تثبيت (.*)")
@@ -208,7 +205,7 @@ async def _(event):
     msg = event.text.split()
     try:
         ch = str(msg[2])
-        await event.edit(f"حسناً سيتم بدء التثبيت في**-  @{ch} .**")
+        await event.edit(f"حسناً سيتم بدء التثبيت في**-  @{ch} .")
     except:
         try:
             ch = await jmub(
@@ -218,16 +215,14 @@ async def _(event):
                 )
             )
             ch = ch.updates[1].channel_id
-            await event.edit(f"**- تم بنجاح بدأ التثبيت**")
+            await event.edit(f"- تم بنجاح بدأ التثبيت**")
         except Exception as e:
             await jmub.send_message(
                 event.chat_id, f"خطأ في انشاء القناة , الخطأ : {str(e)}"
             )
     isauto.clear()
     isauto.append("on")
-    username = str(msg[1])
-
-    for i in range(1000000000000):
+    username = str(msg[1])for i in range(1000000000000):
         isav = check_user(username)
         if isav == True:
             try:
@@ -243,7 +238,7 @@ async def _(event):
                 break
             except telethon.errors.rpcerrorlist.UsernameInvalidError:
                 await event.client.send_message(
-                    event.chat_id, f"المعرف **-  @{username} غير صالح . **"
+                    event.chat_id, f"المعرف -  @{username} غير صالح . "
                 )
                 break
             except telethon.errors.FloodError as e:
@@ -264,15 +259,15 @@ async def _(event):
         await asyncio.sleep(1.3)
     isclaim.clear()
     isclaim.append("off")
-    await jmub.send_message(event.chat_id, "**- تم الانتهاء من التثبيت بنجاح**")
+    await jmub.send_message(event.chat_id, "- تم الانتهاء من التثبيت بنجاح")
 
 
 @jmub.ar_cmd(pattern="حالة الصيد")
 async def _(event):
     if "on" in isclaim:
-        await event.edit(f"**- الصيد وصل لـ({trys[0]}) **من المحاولات")
+        await event.edit(f"- الصيد وصل لـ({trys[0]}) **من المحاولات")
     elif "off" in isclaim:
-        await event.edit("**- الصيد بالاصل لا يعمل .**")
+        await event.edit("- الصيد بالاصل لا يعمل .")
     else:
         await event.edit("- لقد حدث خطأ ما وتوقف الامر لديك")
 
@@ -280,8 +275,8 @@ async def _(event):
 @jmub.ar_cmd(pattern="حالة التثبيت")
 async def _(event):
     if "on" in isauto:
-        await event.edit(f"**- التثبيت وصل لـ({trys2[0]}) من المحاولات**")
+        await event.edit(f"- التثبيت وصل لـ({trys2[0]}) من المحاولات**")
     elif "off" in isauto:
-        await event.edit("**- التثبيت بالاصل لا يعمل .**")
+        await event.edit("- التثبيت بالاصل لا يعمل .")
     else:
         await event.edit("-لقد حدث خطأ ما وتوقف الامر لديك")
