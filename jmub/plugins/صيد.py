@@ -1,4 +1,4 @@
-# by: t.me/Dar4k  ~ t.me/R0R77
+# by: t.me/zeko124  ~ t.me/zeko124
 
 import random
 
