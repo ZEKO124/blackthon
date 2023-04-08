@@ -14,16 +14,16 @@ async def _(event):
     await event.edit("حسنا, تأكد من انك مشترك ب قنوات الاشتراك الاجباري لتجنب الأخطأء")
     channel_entity = await jmub.get_entity("@t06bot")
     await jmub.send_message("@t06bot", "/start")
-    await asyncio.sleep(2)
+    await asyncio.sleep(5)
     msg0 = await jmub.get_messages("@t06bot", limit=1)
     await msg0[0].click(2)
-    await asyncio.sleep(2)
+    await asyncio.sleep(5)
     msg1 = await jmub.get_messages("@t06bot", limit=1)
     await msg1[0].click(0)
 
     chs = 1
-    for i in range(10):
-        await asyncio.sleep(1)
+    for i in range(100):
+        await asyncio.sleep(5)
         list = await jmub(
             GetHistoryRequest(
                 peer=channel_entity,
@@ -44,7 +44,7 @@ async def _(event):
             != -1
         ):
             await jmub.send_message(
-                event.chat_id, f"- لا توجد قنوات متاحة في البوت"
+                event.chat_id, f"**- لا توجد قنوات متاحة في البوت**"
             )
             break
         url = msgs.reply_markup.rows[0].buttons[0].url
@@ -52,10 +52,10 @@ async def _(event):
             try:
                 await jmub(JoinChannelRequest(url))
             except:
-                bott = url.split('/')[-1]
+                bott = url.split("/")[-1]
                 await jmub(ImportChatInviteRequest(bott))
             msg2 = await jmub.get_messages("@t06bot", limit=1)
-            await msg2[0].click(text='تحقق')
+            await msg2[0].click(text="تحقق")
             chs += 1
             await event.edit("- تم بنجاح الاشتراك في {chs} قناة")
         except FloodWaitError as e:
@@ -64,7 +64,6 @@ async def _(event):
             )
             sleep_time = int(str(e).split("in ")[1].split(" seconds")[0])
             await asyncio.sleep(sleep_time)
- 
 
 # t.me/zeko124
 @jmub.ar_cmd(pattern="بخشيش وعد (.*)")
