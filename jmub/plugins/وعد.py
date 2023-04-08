@@ -65,6 +65,7 @@ async def _(event):
             sleep_time = int(str(e).split("in ")[1].split(" seconds")[0])
             await asyncio.sleep(sleep_time)
 
+
 # t.me/zeko124
 @jmub.ar_cmd(pattern="بخشيش وعد (.*)")
 async def baqshis(event):
