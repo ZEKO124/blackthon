@@ -55,7 +55,7 @@ async def startup_process():
             await load_plugins("plugins")
             await load_plugins("assistant")
             LOGS.info("============================================================")
-            LOGS.info("تم انتهاء عملية التنصيب بنجاح")
+            LOGS.info("تم انتهاء عملية  تنصيب بلاكثون بنجاح")
             LOGS.info(
                 f"لمعرفة اوامر السورس ارسل {cmdhr}الاوامر\
                 \nمجموعة قناة السورس  https://t.me/gibthon9"
