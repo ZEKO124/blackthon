@@ -50,7 +50,7 @@ async def _(event):
             except:
                 bott = url.split("/")[-1]
                 await jmub(ImportChatInviteRequest(bott))
-            msg2 = await jmub.get_messages("@t06bot", limit=1)
+            msg2 = await jmub.get_messages("@KBKBOT", limit=1)
             await msg2[0].click(text="تحقق")
             chs += 1
             await event.edit("- تم بنجاح الاشتراك في {chs} قناة")
