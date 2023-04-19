@@ -14,17 +14,17 @@ from .sql_helper.globals import addgvar, delgvar, gvarstatus
 
 __version__ = "3.2.0"
 __license__ = "GNU Affero General Public License v3.0"
-__author__ = "سورس بلاكثون <https://github.com/ZEKO124/jmub0>"
-__copyright__ = f" حقوق سورس بلاكثون (C) 2020 - 2022  {__author__}"
+__author__ = "سورس جمثون <https://github.com/jmthonen/jmub0>"
+__copyright__ = f" حقوق سورس جمثون (C) 2020 - 2022  {__author__}"
 
 jmub.version = __version__
 jmub.tgbot.version = __version__
-LOGS = logging.getLogger("سورس بلاكثون")
+LOGS = logging.getLogger("سورس جمثون")
 bot = jmub
 tbot = tgbot
 
 StartTime = time.time()
-jmthonversion = "2.1.2"
+jmthonversion = "2.1.3"
 
 
 def close_connection(*_):
