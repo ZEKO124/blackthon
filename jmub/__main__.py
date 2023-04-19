@@ -18,7 +18,7 @@ from .utils import (
     verifyLoggerGroup,
 )
 
-LOGS = logging.getLogger("سورس بلاكثون")
+LOGS = logging.getLogger("سورس أكثون")
 
 cmdhr = Config.COMMAND_HAND_LER
 
@@ -55,10 +55,10 @@ async def startup_process():
             await load_plugins("plugins")
             await load_plugins("assistant")
             LOGS.info("============================================================")
-            LOGS.info("تم انتهاء عملية  تنصيب بلاكثون بنجاح")
+            LOGS.info("تم انتهاء عملية التنصيب بنجاح")
             LOGS.info(
                 f"لمعرفة اوامر السورس ارسل {cmdhr}الاوامر\
-                \nمجموعة قناة السورس  https://t.me/gibthon9"
+                \nمجموعة قناة السورس  https://t.me/AkTSupport"
             )
             LOGS.info("============================================================")
             await verifyLoggerGroup()
@@ -71,9 +71,9 @@ async def startup_process():
             LOGS.info(str(e))
             return
     else:
-        LOGS.info("انت لا يمكنك تنصيب سورس بلاكثون عزيزي دي")
-        LOGS.info("انت لا يمكنك تنصيب سورس بلاكثون عزيزي دي")
-        LOGS.info("انت لا يمكنك تنصيب سورس بلاكثون عزيزي دي")
+        LOGS.info("انت لا يمكنك تنصيب سورس أكثون عزيزي دي")
+        LOGS.info("انت لا يمكنك تنصيب سورس أكثون عزيزي دي")
+        LOGS.info("انت لا يمكنك تنصيب سورس أكثون عزيزي دي")
 
 
 jmub.loop.run_until_complete(startup_process())
