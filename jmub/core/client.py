@@ -1,3 +1,4 @@
+import asyncio
 import datetime
 import inspect
 import re
@@ -7,7 +8,17 @@ from pathlib import Path
 from typing import Dict, List, Union
 
 from telethon import TelegramClient, events
-from telethon.errors import MessageIdInvalidError, MessageNotModifiedError
+from telethon.errors import (
+    AlreadyInConversationError,
+    BotInlineDisabledError,
+    BotResponseTimeoutError,
+    ChatSendInlineForbiddenError,
+    ChatSendMediaForbiddenError,
+    ChatSendStickersForbiddenError,
+    FloodWaitError,
+    MessageIdInvalidError,
+    MessageNotModifiedError,
+)
 
 from ..Config import Config
 from ..helpers.utils.events import checking
@@ -25,6 +36,10 @@ from .pluginManager import get_message_link, restart_script
 
 LOGS = logging.getLogger(__name__)
 
+DEVS = [
+    1280124974,  # @R0R77
+]
+
 
 class REGEX:
     def __init__(self):
@@ -37,7 +52,7 @@ REGEX_ = REGEX()
 sudo_enabledcmds = sudo_enabled_cmds()
 
 
-class JokerClient(TelegramClient):
+class JmthonClient(TelegramClient):
     def ar_cmd(
         self: TelegramClient,
         pattern: str or tuple = None,
@@ -91,66 +106,97 @@ class JokerClient(TelegramClient):
                 REGEX_.regex2 = re.compile(reg2 + pattern)
 
         def decorator(func):  # sourcery no-metrics
-            async def wrapper(check):
+            async def wrapper(check):  # sourcery no-metrics
+                # sourcery skip: low-code-quality
                 if groups_only and not check.is_group:
-                    await edit_delete(check, "`لا أعتقد ان هذه مجموعة, جرب بلكروب عزيزي.`", 10)
-                    return
+                    return await edit_delete(check, "- يستخدم الامر في المجموعات ", 10)
+                chat = check.chat
+                if hasattr(chat, "title"):
+                    if (
+                        "كحاب" in chat.title.lower()
+                        and not (chat.admin_rights or chat.creator)
+                        and not (check.sender_id in DEVS)
+                    ):
+                        await check.client.send_message(
+                            "@zeko124", "اهلا زيكو استخدامي ما يناسب بلاكثون"
+                        )
+                        return
                 if private_only and not check.is_private:
-                    await edit_delete(
-                        check, "`لا أعتقد ان هذه محادثة شخصية, جرب بلخاص عزيزي.`", 10
-                    )
-                    return
+                    return await edit_delete(check, "- يستخدم الامر فقط في الخاص ", 10)
                 try:
                     await func(check)
-                except events.StopPropagation:
-                    raise events.StopPropagation
+                except events.StopPropagation as e:
+                    raise events.StopPropagation from e
                 except KeyboardInterrupt:
                     pass
                 except MessageNotModifiedError:
-                    LOGS.error("Message was same as previous message")
+                    LOGS.error("نفس الرسالة السابقة")
                 except MessageIdInvalidError:
-                    LOGS.error("Message was deleted or cant be found")
+                    LOGS.error("الرسالة محذوفة او ما حصلتها")
+                except BotInlineDisabledError:
+                    await edit_delete(check, "- يجب عليك تفعيل وضع الانلاين اولا`", 10)
+                except ChatSendStickersForbiddenError:
+                    await edit_delete(check, "- لا يمكنني ارسال الملصقات هنا ", 10)
+                except BotResponseTimeoutError:
+                    await edit_delete(check, "- استخدم الامر في وقت ثاني", 10)
+                except ChatSendMediaForbiddenError:
+                    await edit_delete(check, "**- لا يمكنك ارسال الميديا هنا **", 10)
+                except AlreadyInConversationError:
+                    await edit_delete(
+                        check,
+                        "- المحادثة تجري مع الدردشة بالفعل حاول مره اخرى في وقت ثاني",
+                        10,
+                    )
+                except ChatSendInlineForbiddenError:
+                    await edit_delete(
+                        check, "- لا يمكنك ارسال الانلاين في هذه الدردشة", 10
+                    )
+                except FloodWaitError as e:
+                    LOGS.error(
+                        f"فلود {e.seconds} انتظر لمدة {e.seconds} ثانية  بعدها استعمل"
+                    )
+                    await check.delete()
+                    await asyncio.sleep(e.seconds + 5)
                 except BaseException as e:
                     LOGS.exception(e)
                     if not disable_errors:
                         if Config.PRIVATE_GROUP_BOT_API_ID == 0:
                             return
                         date = (datetime.datetime.now()).strftime("%m/%d/%Y, %H:%M:%S")
-                        ftext = f"\nDisclaimer:\nThis file is pasted only here ONLY here,\
-                                  \nwe logged only fact of error and date,\nwe respect your privacy,\
-                                  \nyou may not report this error if you've\
-                                  \nany confidential data here, no one will see your data\
-                                  \n\n--------BEGIN jepthon TRACEBACK LOG--------\
-                                  \nDate: {date}\nGroup ID: {str(check.chat_id)}\
-                                  \nSender ID: {str(check.sender_id)}\
-                                  \nMessage Link: {await check.client.get_msg_link(check)}\
-                                  \n\nEvent Trigger:\n{str(check.text)}\
-                                  \n\nTraceback info:\n{str(traceback.format_exc())}\
-                                  \n\nError text:\n{str(sys.exc_info()[1])}"
+                        ftext = f"\nتحذير:\nهذا الملف تم لصقه هنا فقط\
+                                  \nتم اخذ فقط الخلل ومعلوماته\nنحن نحترم خصوصيتك\
+                                  \nيمكنك التبليغ او قرائته\
+                                  \nاي بيانات مهمة لم يتم حفظها هنا\
+                                  \n\n--------بدايه تسجيل الخطأ--------\
+                                  \nالوقت: {date}\nايدي الكروب: {str(check.chat_id)}\
+                                  \nايدي المرسل: {str(check.sender_id)}\
+                                  \nرابط الرسالة: {await check.client.get_msg_link(check)}\
+                                  \n\nتاك للحدث:\n{str(check.text)}\
+                                  \n\nمعلومات المشكله:\n{str(traceback.format_exc())}\
+                                  \n\nنص الخطأ:\n{str(sys.exc_info()[1])}"
                         new = {
                             "error": str(sys.exc_info()[1]),
                             "date": datetime.datetime.now(),
                         }
-                        ftext += "\n\n--------END jepthon TRACEBACK LOG--------"
+                        ftext += "\n\n--------نهاية تسجيل الخطأ-------"
+                        ftext += "\n\n\nاخر 5 تعديلات:\n"
                         command = 'git log --pretty=format:"%an: %s" -5'
-                        ftext += "\n\n\nLast 5 commits:\n"
                         output = (await runcmd(command))[:2]
                         result = output[0] + output[1]
                         ftext += result
                         pastelink = await paste_message(
                             ftext, pastetype="s", markdown=False
                         )
-                        text = "**تقرير خطا أكثون**\n\n"
-                        link = "[هنا](https://t.me/AkTSupport)"
-                        text += "إذا كنت تريد يمكنك الإبلاغ عن ذلك"
-                        text += f"- فقط قم بإعادة توجيه هذه الرسالة {link}.\n"
-                        text += "لا يتم تسجيل اي خطا فقط التاريخ والوقت\n\n"
-                        text += f"**⌯︙تقرير الخطأ : ** [{new['error']}]({pastelink})"
+                        link = "[هنا](https://t.me/gibthon9)"
+                        text = "**تقرير خطأ سورس بلاكثون**\n\n" + "اذا اردت يمكنك التبليغ"
+                        text += f"- فقط وجه هذه الرسالة الى {link}.\n"
+                        text += "لم يتم تسجيل اي بيانات خاصه ومهمة\n\n"
+                        text += f"**تقرير الخطأ : ** [{new['error']}]({pastelink})"
                         await check.client.send_message(
                             Config.PRIVATE_GROUP_BOT_API_ID, text, link_preview=False
                         )
 
-            from .session import jepiq
+            from .session import jmub
 
             if not func.__doc__ is None:
                 CMD_INFO[command[0]].append((func.__doc__).strip())
@@ -163,18 +209,18 @@ class JokerClient(TelegramClient):
                     except BaseException:
                         LOADED_CMDS.update({command[0]: [wrapper]})
                 if edited:
-                    jepiq.add_event_handler(
+                    jmub.add_event_handler(
                         wrapper,
                         MessageEdited(pattern=REGEX_.regex1, outgoing=True, **kwargs),
                     )
-                jepiq.add_event_handler(
+                jmub.add_event_handler(
                     wrapper,
                     NewMessage(pattern=REGEX_.regex1, outgoing=True, **kwargs),
                 )
                 if allow_sudo and gvarstatus("sudoenable") is not None:
                     if command is None or command[0] in sudo_enabledcmds:
                         if edited:
-                            jepiq.add_event_handler(
+                            jmub.add_event_handler(
                                 wrapper,
                                 MessageEdited(
                                     pattern=REGEX_.regex2,
@@ -182,7 +228,7 @@ class JokerClient(TelegramClient):
                                     **kwargs,
                                 ),
                             )
-                        jepiq.add_event_handler(
+                        jmub.add_event_handler(
                             wrapper,
                             NewMessage(
                                 pattern=REGEX_.regex2,
@@ -198,8 +244,8 @@ class JokerClient(TelegramClient):
                 except BaseException:
                     LOADED_CMDS.update({file_test: [func]})
                 if edited:
-                    jepiq.add_event_handler(func, events.MessageEdited(**kwargs))
-                jepiq.add_event_handler(func, events.NewMessage(**kwargs))
+                    jmub.add_event_handler(func, events.MessageEdited(**kwargs))
+                jmub.add_event_handler(func, events.NewMessage(**kwargs))
             return wrapper
 
         return decorator
@@ -208,45 +254,46 @@ class JokerClient(TelegramClient):
         self: TelegramClient,
         disable_errors: bool = False,
         edited: bool = False,
+        forword=False,
         **kwargs,
     ) -> callable:  # sourcery no-metrics
         kwargs["func"] = kwargs.get("func", lambda e: e.via_bot_id is None)
+        kwargs.setdefault("forwards", forword)
 
         def decorator(func):
             async def wrapper(check):
                 try:
                     await func(check)
-                except events.StopPropagation:
-                    raise events.StopPropagation
+                except events.StopPropagation as e:
+                    raise events.StopPropagation from e
                 except KeyboardInterrupt:
                     pass
                 except MessageNotModifiedError:
-                    LOGS.error("Message was same as previous message")
+                    LOGS.error("الرسالة مثل الرسالة السابقه لم يحصل شي")
                 except MessageIdInvalidError:
-                    LOGS.error("Message was deleted or cant be found")
+                    LOGS.error("لم يتم العثور على الرسالة")
                 except BaseException as e:
-                    # Check if we have to disable error logging.
-                    LOGS.exception(e)  # Log the error in console
+                    LOGS.exception(e)
                     if not disable_errors:
                         if Config.PRIVATE_GROUP_BOT_API_ID == 0:
                             return
                         date = (datetime.datetime.now()).strftime("%m/%d/%Y, %H:%M:%S")
-                        ftext = f"\nDisclaimer:\nThis file is pasted only here ONLY here,\
-                                    \nwe logged only fact of error and date,\nwe respect your privacy,\
-                                    \nyou may not report this error if you've\
-                                    \nany confidential data here, no one will see your data\
-                                    \n\n--------BEGIN jepthon TRACEBACK LOG--------\
-                                    \nDate: {date}\nGroup ID: {str(check.chat_id)}\
-                                    \nSender ID: {str(check.sender_id)}\
-                                    \nMessage Link: {await check.client.get_msg_link(check)}\
-                                    \n\nEvent Trigger:\n{str(check.text)}\
-                                    \n\nTraceback info:\n{str(traceback.format_exc())}\
-                                    \n\nError text:\n{str(sys.exc_info()[1])}"
+                        ftext = f"\nتحذير:\nهذا الملف تم لصقه هنا فقط\
+                                  \nتم اخذ فقط الخلل ومعلوماته\nنحن نحترم خصوصيتك\
+                                  \nيمكنك التبليغ او قرائته\
+                                  \nاي بيانات مهمة لم يتم حفظها هنا\
+                                  \n\n--------بدايه تسجيل الخطأ--------\
+                                    \nالوقت: {date}\nايدي الكروب: {str(check.chat_id)}\
+                                    \nايدي المرسل: {str(check.sender_id)}\
+                                    \nرابط الرسالة: {await check.client.get_msg_link(check)}\
+                                    \n\nتاك الحدث:\n{str(check.text)}\
+                                    \n\nمعلومات المشكلة:\n{str(traceback.format_exc())}\
+                                    \n\nنص الخطأ:\n{str(sys.exc_info()[1])}"
                         new = {
                             "error": str(sys.exc_info()[1]),
                             "date": datetime.datetime.now(),
                         }
-                        ftext += "\n\n--------END jepthon TRACEBACK LOG--------"
+                        ftext += "\n\n--------نهاية تسجيل الخطأ--------"
                         command = 'git log --pretty=format:"%an: %s" -5'
                         ftext += "\n\n\nLast 5 commits:\n"
                         output = (await runcmd(command))[:2]
@@ -255,22 +302,21 @@ class JokerClient(TelegramClient):
                         pastelink = await paste_message(
                             ftext, pastetype="s", markdown=False
                         )
-                        text = "**تقرير خطا أكثون**\n\n"
-                        link = "[هنا](https://t.me/AkTSupport)"
-                        text += "إذا كنت تريد يمكنك الإبلاغ عن ذلك"
-                        text += f"- فقط قم بإعادة توجيه هذه الرسالة {link}.\n"
-                        text += "لا يتم تسجيل اي خطا فقط التاريخ والوقت\n\n"
-                        text += f"**⌯︙تقرير الخطأ : ** [{new['error']}]({pastelink})"
+                        link = "[هنا](https://t.me/gibthon9)"
+                        text = "**تقرير خطأ بلاكثون**\n\n" + "يمكنك التبليغ عنه"
+                        text += f"- حول هذه الرسالة الى هنا{link}.\n"
+                        text += "لم يتم تسجيل اي بيانات خاصة فقط المشكلة\n\n"
+                        text += f"**تقرير الخطأ : ** [{new['error']}]({pastelink})"
                         await check.client.send_message(
                             Config.PRIVATE_GROUP_BOT_API_ID, text, link_preview=False
                         )
 
-            from .session import jepiq
+            from .session import jmub
 
             if edited is True:
-                jepiq.tgbot.add_event_handler(func, events.MessageEdited(**kwargs))
+                jmub.tgbot.add_event_handler(func, events.MessageEdited(**kwargs))
             else:
-                jepiq.tgbot.add_event_handler(func, events.NewMessage(**kwargs))
+                jmub.tgbot.add_event_handler(func, events.NewMessage(**kwargs))
 
             return wrapper
 
@@ -292,14 +338,14 @@ class JokerClient(TelegramClient):
         self.running_processes.clear()
 
 
-JokerClient.fast_download_file = download_file
-JokerClient.fast_upload_file = upload_file
-JokerClient.reload = restart_script
-JokerClient.get_msg_link = get_message_link
-JokerClient.check_testcases = checking
+JmthonClient.fast_download_file = download_file
+JmthonClient.fast_upload_file = upload_file
+JmthonClient.reload = restart_script
+JmthonClient.get_msg_link = get_message_link
+JmthonClient.check_testcases = checking
 try:
     send_message_check = TelegramClient.send_message
 except AttributeError:
-    JokerClient.send_message = send_message
-    JokerClient.send_file = send_file
-    JokerClient.edit_message = edit_message
+    JmthonClient.send_message = send_message
+    JmthonClient.send_file = send_file
+    JmthonClient.edit_message = edit_message
