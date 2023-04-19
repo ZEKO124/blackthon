@@ -14,7 +14,7 @@ from .sql_helper.globals import addgvar, delgvar, gvarstatus
 
 __version__ = "3.2.0"
 __license__ = "GNU Affero General Public License v3.0"
-__author__ = "سورس بلاكثون <https://github.com/jmthonen/jmub0>"
+__author__ = "سورس بلاكثون <https://github.com/ZEKO124/jmub0>"
 __copyright__ = f" حقوق سورس بلاكثون (C) 2020 - 2022  {__author__}"
 
 jmub.version = __version__
