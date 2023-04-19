@@ -227,7 +227,7 @@ async def upstream(event):
     # Special case for deploy
     if changelog == "" and not force_update:
         await event.edit(
-            "\n**• سورس جمثون محدث الى أخر اصدار**"
+            "\n**• سورس بلاكثون محدث الى أخر اصدار**"
             f"**\n الفـرع: {UPSTREAM_REPO_BRANCH}**\n"
         )
         return repo.__del__()
@@ -235,19 +235,19 @@ async def upstream(event):
         await print_changelogs(event, ac_br, changelog)
         await event.delete()
         return await event.respond(
-            f"**• ارسل** `{cmdhd}تحديث التنصيب` لتحديث سورس جمثون"
+            f"**• ارسل** `{cmdhd}حدث` لتحديث سورس بلاكثون"
         )
 
     if force_update:
         await event.edit("**• جار التحديث الاجباري الى اخر اصدار انتظر قليلا**")
     if conf == "الان":
-        await event.edit("**• جار تحديث سورس جمثون أنتظر قليلا**")
+        await event.edit("**• جار تحديث سورس بلاكثون أنتظر قليلا**")
         await update_bot(event, repo, ups_rem, ac_br)
     return
 
 
 @jmub.ar_cmd(
-    pattern="تحديث التنصيب$",
+    pattern="حدث$",
 )
 async def upstream(event):
     if ENV:
@@ -258,7 +258,7 @@ async def upstream(event):
     elif os.path.exists("config.py"):
         return await edit_delete(
             event,
-            f"**• انت تستخدم التنصيب يدويا يرجى ارسال امر** `{cmdhd}تحديث الان`",
+            f"**• انت تستخدم التنصيب يدويا يرجى ارسال امر** `{cmdhd}حدث`",
         )
     event = await edit_or_reply(event, "**- جار جلب ملفات السورس يرجى الانتظار قليلا**")
     off_repo = "https://github.com/ZEKO124/gibthon"
