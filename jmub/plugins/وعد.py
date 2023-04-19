@@ -10,7 +10,7 @@ c = requests.session()
 bot_username = '@KBKBOT'
 
 
-@sedthon.on(events.NewMessage(outgoing=True, pattern=r"\.بوت المليار"))
+@jmub.on(events.NewMessage(outgoing=True, pattern=r"\.بوت المليار"))
 async def _(event):
     if ispay[0] == "yes":
         await event.edit(KBKBOT)
@@ -18,17 +18,17 @@ async def _(event):
         await event.edit("يجب الدفع لاستعمال هذا الامر !")
 
 
-@sedthon.on(events.NewMessage(outgoing=True, pattern=r"\.جمع"))
+@jmub.on(events.NewMessage(outgoing=True, pattern=r"\.جمع"))
 async def _(event):
     if ispay[0] == "yes":
         await event.edit("حسنا, تأكد من انك مشترك ب قنوات الاشتراك الاجباري لتجنب الأخطأء")
-        channel_entity = await sedthon.get_entity(bot_username)
-        await sedthon.send_message('@KBKBOT', '/start')
+        channel_entity = await jmub.get_entity(bot_username)
+        await jmub.send_message('@KBKBOT', '/start')
         await asyncio.sleep(0)
-        msg0 = await sedthon.get_messages('@KBKBOT', limit=1)
+        msg0 = await jmub.get_messages('@KBKBOT', limit=1)
         await msg0[0].click(0)
         await asyncio.sleep(0)
-        msg1 = await sedthon.get_messages('@KBKBOT', limit=1)
+        msg1 = await jmub.get_messages('@KBKBOT', limit=1)
         await msg1[0].click(0)
 
         chs = 1
@@ -37,27 +37,27 @@ async def _(event):
                 break
             await asyncio.sleep(0)
 
-            list = await sedthon(GetHistoryRequest(peer=channel_entity, limit=1,
+            list = await jmub(GetHistoryRequest(peer=channel_entity, limit=1,
                                                    offset_date=None, offset_id=0, max_id=0, min_id=0, add_offset=0, hash=0))
             msgs = list.messages[0]
             if msgs.message.find('لا يوجد قنوات في الوقت الحالي , قم يتجميع النقاط بطريقه مختلفه') != -1:
-                await sedthon.send_message(event.chat_id, f"مافي قنوات بلبوت")
+                await jmub.send_message(event.chat_id, f"مافي قنوات بلبوت")
                 break
             url = msgs.reply_markup.rows[0].buttons[0].url
             try:
                 try:
-                    await sedthon(JoinChannelRequest(url))
+                    await jmub(JoinChannelRequest(url))
                 except:
                     bott = url.split('/')[-1]
-                    await sedthon(ImportChatInviteRequest(bott))
-                msg2 = await sedthon.get_messages('@t06bot', limit=1)
+                    await jmub(ImportChatInviteRequest(bott))
+                msg2 = await jmub.get_messages('@KBKBOT', limit=1)
                 await msg2[0].click(text='تحقق')
                 chs += 1
-                await sedthon.send_message(event.chat_id, f"تم الاشتراك في {chs} قناة")
+                await jmub.send_message(event.chat_id, f"تم الاشتراك في {chs} قناة")
             except:
-                await sedthon.send_message(event.chat_id, f"خطأ , ممكن تبندت")
+                await jmub.send_message(event.chat_id, f"خطأ , ممكن تبندت")
                 break
-        await sedthon.send_message(event.chat_id, "تم الانتهاء من التجميع !")
+        await jmub.send_message(event.chat_id, "تم الانتهاء من التجميع !")
 
     else:
         await event.edit("يجب الدفع لاستعمال هذا الامر !")
