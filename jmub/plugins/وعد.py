@@ -1,6 +1,3 @@
-import logging
-import time
-import datetime
 from telethon.tl.functions.messages import GetHistoryRequest
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.functions.messages import ImportChatInviteRequest
@@ -8,181 +5,63 @@ import requests
 from config import *
 import asyncio
 from telethon import events
-# -
-
-sython.start()
+from help import *
 c = requests.session()
 bot_username = '@KBKBOT'
-bot_usernamee = '@A_MAN9300BOT'
-bot_usernameee = '@MARKTEBOT'
 
 
-
-@sython.on(events.NewMessage(outgoing=True, pattern=r"\.فحص"))
+@sedthon.on(events.NewMessage(outgoing=True, pattern=r"\.بوت المليار"))
 async def _(event):
-    start = datetime.datetime.now()
-    await event.edit("جارٍ...")
-    end = datetime.datetime.now()
-    ms = (end - start).microseconds / 1000
-    await event.edit(f'''**
-SYTHON TAMOEL IS WORKING
-╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
-- VERSION : 2.0
-- DEVLOBER : SOMY TEAM
-- CHANNEL : @SAYTHONH
-╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
-ارسـل '.اوامر التجميع' لفتح الاوامر الخاصة بالسورس
-**''')
+    if ispay[0] == "yes":
+        await event.edit(KBKBOT)
+    else:
+        await event.edit("يجب الدفع لاستعمال هذا الامر !")
 
 
-@sython.on(events.NewMessage(outgoing=True, pattern=r"\.اوامر التجميع"))
+@sedthon.on(events.NewMessage(outgoing=True, pattern=r"\.جمع"))
 async def _(event):
-    start = datetime.datetime.now()
-    await event.edit("جارٍ...")
-    end = datetime.datetime.now()
-    ms = (end - start).microseconds / 1000
-    await event.edit(f'''**
-تجميع نقاط بوت المليار » `.تجميع المليار`
-تجميع نقاط بوت الجوكر » `.تجميع الجوكر`
-تجميع نقاط بوت العقاب » `.تجميع العقاب`
-**''')
-    
-
-
-@sython.on(events.NewMessage(outgoing=True, pattern=r"\.تجميع المليار"))
-async def _(event):
-        await event.edit("**حسنا, تأكد من انك مشترك ب قنوات الاشتراك الاجباري لتجنب الأخطأء**")
-        channel_entity = await sython.get_entity(bot_username)
-        await sython.send_message('@KBKBOT', '**جاري التجميع بواسطة | SOMY TEAM**')
-        channel_entity = await sython.get_entity(bot_username)
-        await sython.send_message('@KBKBOT', '/start')
-        await asyncio.sleep(5)
-        msg0 = await sython.get_messages('@KBKBOT', limit=1)
-        await msg0[0].click(2)
-        await asyncio.sleep(5)
-        msg1 = await sython.get_messages('@KBKBOT', limit=1)
+    if ispay[0] == "yes":
+        await event.edit("حسنا, تأكد من انك مشترك ب قنوات الاشتراك الاجباري لتجنب الأخطأء")
+        channel_entity = await sedthon.get_entity(bot_username)
+        await sedthon.send_message('@KBKBOT', '/start')
+        await asyncio.sleep(0)
+        msg0 = await sedthon.get_messages('@KBKBOT', limit=1)
+        await msg0[0].click(0)
+        await asyncio.sleep(0)
+        msg1 = await sedthon.get_messages('@KBKBOT', limit=1)
         await msg1[0].click(0)
 
         chs = 1
         for i in range(100):
+            if ispay[0] == 'no':
+                break
+            await asyncio.sleep(0)
 
-            await asyncio.sleep(5)
-
-            list = await sython(GetHistoryRequest(peer=channel_entity, limit=1,
+            list = await sedthon(GetHistoryRequest(peer=channel_entity, limit=1,
                                                    offset_date=None, offset_id=0, max_id=0, min_id=0, add_offset=0, hash=0))
             msgs = list.messages[0]
             if msgs.message.find('لا يوجد قنوات في الوقت الحالي , قم يتجميع النقاط بطريقه مختلفه') != -1:
-                await sython.send_message(event.chat_id, f"لايوجد قنوات  في البوت | SY")
+                await sedthon.send_message(event.chat_id, f"مافي قنوات بلبوت")
                 break
             url = msgs.reply_markup.rows[0].buttons[0].url
             try:
                 try:
-                    await sython(JoinChannelRequest(url))
+                    await sedthon(JoinChannelRequest(url))
                 except:
                     bott = url.split('/')[-1]
-                    await sython(ImportChatInviteRequest(bott))
-                msg2 = await sython.get_messages('@KBKBOT', limit=1)
+                    await sedthon(ImportChatInviteRequest(bott))
+                msg2 = await sedthon.get_messages('@t06bot', limit=1)
                 await msg2[0].click(text='تحقق')
                 chs += 1
-                
+                await sedthon.send_message(event.chat_id, f"تم الاشتراك في {chs} قناة")
             except:
-                await sython.send_message(event.chat_id, f"خطأ من المحتمل تم حظر الانضمام ")
+                await sedthon.send_message(event.chat_id, f"خطأ , ممكن تبندت")
                 break
-        await sython.send_message(event.chat_id, "**تم الانتهاء من التجميع !**")
+        await sedthon.send_message(event.chat_id, "تم الانتهاء من التجميع !")
 
+    else:
+        await event.edit("يجب الدفع لاستعمال هذا الامر !")
 
-##################
-
-
-@sython.on(events.NewMessage(outgoing=True, pattern=r"\.تجميع الجوكر"))
-async def _(event):
-        await event.edit("**حسنا, تأكد من انك مشترك ب قنوات الاشتراك الاجباري لتجنب الأخطأء**")
-        channel_entity = await sython.get_entity(bot_usernamee)
-        await sython.send_message('@A_MAN9300BOT', '**جاري التجميع بواسطة | SOMY TEAM**')
-        channel_entity = await sython.get_entity(bot_usernamee)
-        await sython.send_message('@A_MAN9300BOT', '/start')
-        await asyncio.sleep(5)
-        msg0 = await sython.get_messages('@A_MAN9300BOT', limit=1)
-        await msg0[0].click(2)
-        await asyncio.sleep(5)
-        msg1 = await sython.get_messages('@A_MAN9300BOT', limit=1)
-        await msg1[0].click(0)
-
-        chs = 1
-        for i in range(100):
-
-            await asyncio.sleep(5)
-
-            list = await sython(GetHistoryRequest(peer=channel_entity, limit=1,
-                                                   offset_date=None, offset_id=0, max_id=0, min_id=0, add_offset=0, hash=0))
-            msgs = list.messages[0]
-            if msgs.message.find('لا يوجد قنوات في الوقت الحالي , قم يتجميع النقاط بطريقه مختلفه') != -1:
-                await sython.send_message(event.chat_id, f"لايوجد قنوات  في البوت | SY")
-                break
-            url = msgs.reply_markup.rows[0].buttons[0].url
-            try:
-                try:
-                    await sython(JoinChannelRequest(url))
-                except:
-                    bott = url.split('/')[-1]
-                    await sython(ImportChatInviteRequest(bott))
-                msg2 = await sython.get_messages('@A_MAN9300BOT', limit=1)
-                await msg2[0].click(text='تحقق')
-                chs += 1
-                
-            except:
-                await sython.send_message(event.chat_id, f"خطأ من المحتمل تم حظر الانضمام ")
-                break
-        await sython.send_message(event.chat_id, "**تم الانتهاء من التجميع !**")
-
-############
-@sython.on(events.NewMessage(outgoing=True, pattern=r"\.تجميع العقاب"))
-async def _(event):
-        await event.edit("**حسنا, تأكد من انك مشترك ب قنوات الاشتراك الاجباري لتجنب الأخطأء**")
-        channel_entity = await sython.get_entity(bot_usernameee)
-        await sython.send_message('@MARKTEBOT', '**جاري التجميع بواسطة | SOMY TEAM**')
-        channel_entity = await sython.get_entity(bot_usernameee)
-        await sython.send_message('@MARKTEBOT', '/start')
-        await asyncio.sleep(5)
-        msg0 = await sython.get_messages('@MARKTEBOT', limit=1)
-        await msg0[0].click(2)
-        await asyncio.sleep(5)
-        msg1 = await sython.get_messages('@MARKTEBOT', limit=1)
-        await msg1[0].click(0)
-
-        chs = 1
-        for i in range(100):
-
-            await asyncio.sleep(5)
-
-            list = await sython(GetHistoryRequest(peer=channel_entity, limit=1,
-                                                   offset_date=None, offset_id=0, max_id=0, min_id=0, add_offset=0, hash=0))
-            msgs = list.messages[0]
-            if msgs.message.find('لا يوجد قنوات في الوقت الحالي , قم يتجميع النقاط بطريقه مختلفه') != -1:
-                await sython.send_message(event.chat_id, f"لايوجد قنوات  في البوت | SY")
-                break
-            url = msgs.reply_markup.rows[0].buttons[0].url
-            try:
-                try:
-                    await sython(JoinChannelRequest(url))
-                except:
-                    bott = url.split('/')[-1]
-                    await sython(ImportChatInviteRequest(bott))
-                msg2 = await sython.get_messages('@MARKTEBOT', limit=1)
-                await msg2[0].click(text='تحقق')
-                chs += 1
-                
-            except:
-                await sython.send_message(event.chat_id, f"خطأ من المحتمل تم حظر الانضمام ")
-                break
-        await sython.send_message(event.chat_id, "تم الانتهاء من التجميع !")
-
-
-
-
-
-print("- sython Userbot Running ..")
-sython.run_until_disconnected()
 
 
 # t.me/zeko124
