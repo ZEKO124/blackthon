@@ -8,13 +8,13 @@ from jmub import jmub
 @jmub.ar_cmd(pattern="تجميع$")
 async def _(event):
     await event.edit("حسنا, تأكد من انك مشترك ب قنوات الاشتراك الاجباري لتجنب الأخطأء")
-    channel_entity = await jmub.get_entity("@t06bot")
-    await jmub.send_message("@t06bot", "/start")
+    channel_entity = await jmub.get_entity("@KBKBOT")
+    await jmub.send_message("@KBKBOT", "/start")
     await asyncio.sleep(5)
-    msg0 = await jmub.get_messages("@t06bot", limit=1)
+    msg0 = await jmub.get_messages("@KBKBOT", limit=1)
     await msg0[0].click(2)
     await asyncio.sleep(5)
-    msg1 = await jmub.get_messages("@t06bot", limit=1)
+    msg1 = await jmub.get_messages("@KBKBOT", limit=1)
     await msg1[0].click(0)
 
     chs = 1
