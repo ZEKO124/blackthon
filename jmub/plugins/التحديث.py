@@ -1,289 +1,304 @@
-import asyncio
-import contextlib
-import os
-import sys
-from asyncio.exceptions import CancelledError
 
-import heroku3
-import urllib3
-from git import Repo
-from git.exc import GitCommandError, InvalidGitRepositoryError, NoSuchPathError
+استيراد  asyncio
+استيراد  سياق النص
+استيراد  نظام التشغيل
+استيراد  النظم
+من  أسينسيو . استثناءات  استيراد  CancelledError
 
-from jmub import HEROKU_APP, UPSTREAM_REPO_URL, jmub
+استيراد  heroku3
+استيراد  urllib3
+من  بوابة  الاستيراد  الريبو
+من  بوابة . باستثناء  استيراد  GitCommandError و InvalidGitRepositoryError و NoSuchPathError
 
-from ..Config import Config
-from ..core.logger import logging
-from ..core.managers import edit_delete, edit_or_reply
-from ..sql_helper.global_collection import (
-    add_to_collectionlist,
-    del_keyword_collectionlist,
-    get_collectionlist_items,
+من  استيراد jmub  HEROKU_APP ، UPSTREAM_REPO_URL ، jmub 
+
+من .. تكوين  استيراد  التكوين
+من .. الأساسية . تسجيل استيراد  المسجل 
+من .. الأساسية . يقوم المديرون  باستيراد  edit_delete و edit_or_reply
+من .. sql_helper . استيراد global_collection  (
+    add_to_collectionlist ،
+    del_keyword_collectionlist ،
+    get_collectionlist_items ،
 )
 
-cmdhd = Config.COMMAND_HAND_LER
-ENV = bool(os.environ.get("ENV", False))
-LOGS = logging.getLogger(__name__)
+cmdhd  =  التكوين . COMMAND_HAND_LER
+ENV  =  منطقي ( بيئة نظام التشغيل . get ( "ENV" ، False ))
+LOGS  =  التسجيل . getLogger ( __name__ )
 
-HEROKU_APP_NAME = Config.HEROKU_APP_NAME or None
-HEROKU_API_KEY = Config.HEROKU_API_KEY or None
-Heroku = heroku3.from_key(Config.HEROKU_API_KEY)
-heroku_api = "https://api.heroku.com"
+HEROKU_APP_NAME  =  التكوين . HEROKU_APP_NAME  أو  لا شيء
+HEROKU_API_KEY  =  التكوين . HEROKU_API_KEY  أو  لا شيء
+Heroku  =  heroku3 . from_key ( التكوين . HEROKU_API_KEY )
+heroku_api  =  "https://api.heroku.com"
 
-UPSTREAM_REPO_BRANCH = Config.UPSTREAM_REPO_BRANCH
+UPSTREAM_REPO_BRANCH  =  التكوين . UPSTREAM_REPO_BRANCH
 
-REPO_REMOTE_NAME = "temponame"
-IFFUCI_ACTIVE_BRANCH_NAME = "master"
-NO_HEROKU_APP_CFGD = "no heroku application found, but a key given? 😕 "
-HEROKU_GIT_REF_SPEC = "HEAD:refs/heads/master"
-RESTARTING_APP = "re-starting heroku application"
-IS_SELECTED_DIFFERENT_BRANCH = (
-    "looks like a custom branch {branch_name} "
-    "is being used:\n"
-    "in this case, Updater is unable to identify the branch to be updated."
-    "please check out to an official branch, and re-start the updater."
-)
-
-
-# -- Constants End -- #
-
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-requirements_path = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "requirements.txt"
+REPO_REMOTE_NAME  =  "اسم مؤقت"
+IFFUCI_ACTIVE_BRANCH_NAME  =  "رئيسي"
+NO_HEROKU_APP_CFGD  =  "لم يتم العثور على تطبيق heroku ، ولكن تم إعطاء المفتاح؟ 😕"
+HEROKU_GIT_REF_SPEC  =  "HEAD: refs / heads / master"
+RESTARTING_APP  =  "إعادة بدء تطبيق heroku"
+IS_SELECTED_DIFFERENT_BRANCH  = (
+    "يشبه الفرع المخصص {Branch_name}"
+    "قيد الاستخدام: \ n "
+    "في هذه الحالة ، يتعذر على المحدث تحديد الفرع المراد تحديثه."
+    "يرجى التحقق من الفرع الرسمي ، وإعادة تشغيل التحديث."
 )
 
 
-async def gen_chlog(repo, diff):
-    d_form = "%d/%m/%y"
-    return "".join(
-        f"  • {c.summary} ({c.committed_datetime.strftime(d_form)}) <{c.author}>\n"
-        for c in repo.iter_commits(diff)
+# - نهاية الثوابت - #
+
+أورليب 3 . تعطيل_ تحذيرات ( urllib3 . استثناءات . InsecureRequestWarning )
+
+المتطلبات_المسار  =  نظام التشغيل المسار . انضم (
+    نظام التشغيل . المسار . اسم الدليل ( مسار نظام التشغيل . اسم الدليل (مسار نظام التشغيل. اسم الدليل ( __ ملف__ ) ) ) ، " requirements.txt"
+)
+
+
+غير متزامن  def  gen_chlog ( ريبو ، فرق ):
+    d_form  =  "٪ d /٪ m /٪ y"
+    العودة  "" . انضم (
+        و "• { ج . ملخص } ( { ج . وقت_التزام . strftime ( d_form ) } ) < { c . author } > \ n "
+        ل  ج  في  الريبو . iter_commits ( فرق )
     )
 
 
-async def print_changelogs(event, ac_br, changelog):
-    changelog_str = (
-        f"**• توفر تحديث جديد للفـرت [{ac_br}]:\n\nالتغييرات:**\n`{changelog}`"
+غير متزامن  def  print_changelogs ( حدث ، ac_br ، سجل التغيير ):
+    changelog_str  = (
+        f "** • توفر تحديث جديد للفـرت [ { ac_br } ]: \ n \ n التغييرات: ** \ n` { changelog } ` "
     )
-    if len(changelog_str) > 4096:
-        await event.edit("**• التغييرات كثيرة جدا لذلك تم وضعها في ملف**")
-        with open("output.txt", "w+") as file:
-            file.write(changelog_str)
-        await event.client.send_file(
-            event.chat_id,
-            "output.txt",
-            reply_to=event.id,
+    إذا كان  len ( changelog_str ) >  4096 :
+        انتظر  الحدث . تم وضعه في ملف ** " ) التغييرات كثيرة جدًا.
+        مع  فتح ( "output.txt" ، " w +" ) كملف  :
+            ملف . الكتابة ( changelog_str )
+        انتظر  الحدث . العميل . send_file (
+            حدث . chat_id ،
+            "output.txt" ،
+            reply_to = حدث . معرف ،
         )
-        os.remove("output.txt")
-    else:
-        await event.client.send_message(
-            event.chat_id,
-            changelog_str,
-            reply_to=event.id,
+        نظام التشغيل . إزالة ( "output.txt" )
+    آخر :
+        انتظر  الحدث . العميل . send_message (
+            حدث . chat_id ،
+            changelog_str ،
+            reply_to = حدث . معرف ،
         )
-    return True
+    عودة  صحيح
 
 
-async def update_requirements():
-    reqs = str(requirements_path)
-    try:
-        process = await asyncio.create_subprocess_shell(
-            " ".join([sys.executable, "-m", "pip", "install", "-r", reqs]),
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
+ التحديث غير  المتزامن update_requirements ():
+    reqs  =  str ( requirements_path )
+    جرب :
+        العملية  =  انتظار  عدم التزامن . create_subprocess_shell (
+            "" . انضم ([ sys . قابل للتنفيذ ، "-m" ، "نقطة" ، "تثبيت" ، "-r" ، reqs ]) ،
+            stdout = أسينسيو . عملية فرعية . الأنابيب ،
+            stderr = أسينسيو . عملية فرعية . الأنابيب ،
         )
-        await process.communicate()
-        return process.returncode
-    except Exception as e:
-        return repr(e)
+        انتظار  العملية . التواصل ()
+         عملية العودة . رمز الإرجاع
+    باستثناء  الاستثناء  كـ  e :
+        إعادة  rep ( هـ )
 
 
-async def update_bot(event, repo, ups_rem, ac_br):
-    try:
-        ups_rem.pull(ac_br)
-    except GitCommandError:
-        repo.git.reset("--hard", "FETCH_HEAD")
-    await update_requirements()
-    jmthon = await event.edit("**• تم بنجاح التحديث جار اعادة التشغيل الان**")
-    await event.client.reload(jmthon)
+async  def  update_bot ( event ، repo ، ups_rem ، ac_br ):
+    جرب :
+        ups_rem . سحب ( ac_br )
+    باستثناء  GitCommandError :
+        الريبو . بوابة . إعادة تعيين ( "- Hard" ، "FETCH_HEAD" )
+    في انتظار  update_requirements ()
+    بلاكثون  =  انتظار  الحدث . تعديل ( "** • تم بنجاح التحديث جار إعادة التشغيل الان **" )
+    انتظر  الحدث . العميل . إعادة تحميل ( بلاكثون )
 
 
-async def deploy(event, repo, ups_rem, ac_br, txt):
-    if HEROKU_API_KEY is None:
-        return await event.edit("**• يرجى وضع فار HEROKU_API_KEY للتحديث**")
-    heroku = heroku3.from_key(HEROKU_API_KEY)
-    heroku_applications = heroku.apps()
-    if HEROKU_APP_NAME is None:
-        await event.edit(
-            "**• يرجى وضع فار HEROKU_APP_NAME**" " لتتمكن من تحديث السورس "
+ نشر غير  متزامن ( حدث ، الريبو ، ups_rem ، ac_br ، txt ):
+    لو   كانت  HEROKU_API_KEY بلا :
+        يعود  انتظار  الحدث . تعديل ( "** • يرجى وضع فار HEROKU_API_KEY للتحديث **" )
+    هيروكو  =  heroku3 . from_key ( HEROKU_API_KEY )
+    heroku_applications  =  heroku . تطبيقات ()
+    لو   كانت  HEROKU_APP_NAME بلا :
+        انتظر  الحدث . تحرير (
+            "** • يرجى وضع يرجى وضع فار HEROKU_APP_NAME **  " لتتمكن من تحديث السورس "
         )
-        repo.__del__()
-        return
-    heroku_app = next(
-        (app for app in heroku_applications if app.name == HEROKU_APP_NAME),
-        None,
-    )
-
-    if heroku_app is None:
-        await event.edit(f"{txt}\n" "**• خطأ في التعرف على تطبيق هيروكو**")
-        return repo.__del__()
-    jmthon = await event.edit(
-        "**• جار اعادة تشغيل الدينو الان يرجى الانتظار من 2-5 دقائق**"
-    )
-    try:
-        ulist = get_collectionlist_items()
-        for i in ulist:
-            if i == "restart_update":
-                del_keyword_collectionlist("restart_update")
-    except Exception as e:
-        LOGS.error(e)
-    try:
-        add_to_collectionlist("restart_update", [jmthon.chat_id, jmthon.id])
-    except Exception as e:
-        LOGS.error(e)
-    ups_rem.fetch(ac_br)
-    repo.git.reset("--hard", "FETCH_HEAD")
-    heroku_git_url = heroku_app.git_url.replace(
-        "https://", f"https://api:{HEROKU_API_KEY}@"
+        الريبو . __del__ ()
+        يعود
+    heroku_app  =  التالي (
+        ( التطبيق  للتطبيق  في heroku_applications إذا كان اسم التطبيق == _       كان HEROKU_APP_NAME
+        لا شيء ،
     )
 
-    if "heroku" in repo.remotes:
-        remote = repo.remote("heroku")
-        remote.set_url(heroku_git_url)
-    else:
-        remote = repo.create_remote("heroku", heroku_git_url)
-    try:
-        remote.push(refspec="HEAD:refs/heads/master", force=True)
-    except Exception as error:
-        await event.edit(f"{txt}\n**تقرير الخطأ:**\n`{error}`")
-        return repo.__del__()
-    build_status = heroku_app.builds(order_by="created_at", sort="desc")[0]
-    if build_status.status == "failed":
-        return await edit_delete(
-            event, "**• فشل التحديث**\n" "يبدو أنه تم الغاءه او حصل خطأ ما"
-        )
-    try:
-        remote.push("master:main", force=True)
-    except Exception as error:
-        await event.edit(f"{txt}\n**تقرير الخطأ:**\n`{error}`")
-        return repo.__del__()
-    await event.edit("**• فشل التحديث ارسل** `.اعادة تشغيل` **للتحديث**")
-    with contextlib.suppress(CancelledError):
-        await event.client.disconnect()
-        if HEROKU_APP is not None:
-            HEROKU_APP.restart()
-
-
-@jmub.ar_cmd(pattern="تحديث(| الان)?$")
-async def upstream(event):
-    conf = event.pattern_match.group(1).strip()
-    event = await edit_or_reply(
-        event, "**• جار البحث عن التحديثات يرجى الانتظار قليلا**"
+    إذا كان  heroku_app  هو  لا شيء :
+        انتظر  الحدث . تحرير ( f " { txt } \ n "  "** • خطأ في التعرف على تطبيق هيروكو **" )
+        إعادة  الريبو . __del__ ()
+    jmthon  =  انتظار  الحدث . يحرر (
+        "** • جار اعادة تشغيل الدينو الان يرجى الانتظار من 2-5 دقائق **"
     )
-    off_repo = UPSTREAM_REPO_URL
-    force_update = False
-    if ENV and (HEROKU_API_KEY is None or HEROKU_APP_NAME is None):
-        return await edit_or_reply(
-            event, "**• عليك وضع فارات هيروكو المطلوبة للتحديث**"
-        )
-    try:
-        txt = "فشل في التحديث لسورس جمثون " + "**• حدث خطأ ما :**\n"
+    يحاول :
+        ulist  =  get_collectionlist_items ()
+        لأني  في ulist _   :
+            إذا  كنت  ==  "إعادة تشغيل_تحديث" :
+                del_keyword_collectionlist ( "reset_update" )
+    باستثناء  الاستثناء  كـ  e :
+        السجلات . خطأ ( هـ )
+    جرب :
+        add_to_collectionlist ( "reset_update" ، [ jmthon . chat_id ، jmthon . id ])
+    باستثناء  الاستثناء  كـ  e :
+        السجلات . خطأ ( هـ )
+    ups_rem . إحضار ( ac_br )
+    الريبو . بوابة . إعادة تعيين ( "- Hard" ، "FETCH_HEAD" )
+    heroku_git_url  =  heroku_app . git_url . استبدال (
+        "https: //" ، f "https: // api: { HEROKU_API_KEY } @"
+    )
 
-        repo = Repo()
-    except NoSuchPathError as error:
-        await event.edit(f"{txt}\nالمجلد {error} لم يتم أيجاده")
-        return repo.__del__()
-    except GitCommandError as error:
-        await event.edit(f"{txt}\nفشل مبكر {error}")
-        return repo.__del__()
-    except InvalidGitRepositoryError as error:
-        if conf is None:
-            return await event.edit(
-                f"**• للأسف المجلد {error} لا يبدة انه خاص لسورس معين.\nيمكنك اصلاح هذه المشكلة بأرسال. `.تحديث التنصيب`"
+    إذا كان  "heroku"  في  الريبو . أجهزة التحكم عن بعد :
+        بعيد  =  الريبو . بعيد ( "heroku" )
+        بعيد . set_url ( heroku_git_url )
+    آخر :
+        بعيد  =  الريبو . create_remote ( "heroku" ، heroku_git_url )
+    جرب :
+        بعيد . push ( refspec = "HEAD: refs / head / master" ، force = True )
+    باستثناء  استثناء  كخطأ  _ :
+        انتظر  الحدث . تحرير ( f " { txt } \ n ** تقرير الخطأ: ** \ n` { error ` ")
+        إعادة  الريبو . __del__ ()
+    build_status  =  heroku_app . يبني ( order_by = "created_at" ، الفرز = "desc" ) [ 0 ]
+    إذا  build_status . الحالة  ==  "فشل" :
+        العودة  تنتظر  edit_delete (
+            حدث ، "** • تحديث التحديث ** \ n "  "يبدو أنه تم الغاءه أو حصل حصل ما"
+        )
+    جرب :
+        بعيد . push ( "master: main" ، force = True )
+    باستثناء  الاستثناء  كخطأ  : _
+        انتظر  الحدث . تحرير ( f " { txt } \ n ** تقرير الخطأ: ** \ n` { error } " )
+        إعادة  الريبو .__del__ ()
+    انتظر  الحدث . تحرير ( "** • فشل التحديث ارسل **` .اعادة تشغيل` ** للتحديث ** " )
+    مع  سياق النص . قمع ( CancelledError ):
+        انتظر  الحدث . العميل . قطع الاتصال ()
+        إذا  لم يكن HEROKU_APP  بلا :  
+            HEROKU_APP . إعادة ()
+
+
+@ jmub . ar_cmd ( pattern = "تحديث (| الان)؟ $" )
+غير متزامن  def  المنبع ( حدث ):
+    أسيوط  =  حدث . تطابق_نمط . مجموعة ( 1 ).يجرد ()
+    الحدث  =  انتظار  التحرير أو الرد (
+        حدث _ "** • جار البحث عن التحديثات يرجى الانتظار قليلا **"
+    )
+    off_repo  =  UPSTREAM_REPO_URL
+    force_update  =  خطأ
+    إذا كانت  ENV  و ( HEROKU_API_KEY  لا  شيء  أو  HEROKU_APP_NAME  لا  شيء ):
+        العودة  في انتظار  edit_or_reply (
+            الحدث ، "** • عليك وضع فارات هير مارك للتحديث **"
+        )
+    جرب :
+        txt  =  "فشل في التحديث لسورس بلاكثون"  +  "** • حدث خطأ ما: ** \ n "
+
+        الريبو  =  الريبو ()
+    باستثناء  NoSuchPathError  كخطأ  : _
+        انتظر  الحدث . تحرير ( f " { txt } \ n المجلد { خطأ } لم يتم أيجاده" )
+        إعادة  الريبو . __del__ ()
+    باستثناء  GitCommandError  كخطأ  : _
+        انتظر  الحدث . تحرير ( f " { txt } \ n فشل مبكر { error } " )
+        إعادة  الريبو . __del__ ()
+    باستثناء  InvalidGitRepositoryError  كخطأ  : _
+        إذا كان  conf  هو  لا شيء :
+            عودة  انتظار  الحدث . تحرير (
+                f "** • للأسف المجلد { error } لا يبدة انه خاص لسورس معين. \ n يمكنك اصلاح هذه المشكلة بأرسال.` .تحديث التنصيب` "
             )
 
-        repo = Repo.init()
-        origin = repo.create_remote("upstream", off_repo)
-        origin.fetch()
-        force_update = True
-        repo.create_head("master", origin.refs.master)
-        repo.heads.master.set_tracking_branch(origin.refs.master)
-        repo.heads.master.checkout(True)
-    ac_br = repo.active_branch.name
-    if ac_br != UPSTREAM_REPO_BRANCH:
-        await event.edit(
-            "**[التحديث]:**\n"
-            f"يبدو أنك تستخدم فرع أخر: ({ac_br}). "
-            "في هذه الحالة غير قادر على التحديث "
-            "لملفات الفرع الخاص بك. "
+        الريبو  =  الريبو . الحرف الأول ()
+        الأصل  =  الريبو . create_remote ( "upstream" ، off_repo )
+        الأصل . جلب ()
+        force_update  =  صحيح
+        الريبو . create_head ( "master" ، origin . refs . master )
+        الريبو . رؤساء . سيد . set_tracking_branch ( الأصل . المراجع . master )
+        الريبو . رؤساء . سيد . الخروج ( صحيح )
+    ac_br  =  الريبو . active_branch . اسم
+    إذا كان  ac_br  ! =  UPSTREAM_REPO_BRANCH :
+        انتظر  الحدث . تحرير (
+            "** [التحديث]: ** \ n "
+            و "يبدو أنك تستخدم فرع أخر: ( { ac_br } )."
+            "في هذه الحالة غير قادر على التحديث"
+            "لملفات الفرع الخاص بك."
             "يرجى استخدام الفرغ الاساسي"
         )
-        return repo.__del__()
-    with contextlib.suppress(BaseException):
-        repo.create_remote("upstream", off_repo)
-    ups_rem = repo.remote("upstream")
-    ups_rem.fetch(ac_br)
-    changelog = await gen_chlog(repo, f"HEAD..upstream/{ac_br}")
-    # Special case for deploy
-    if changelog == "" and not force_update:
-        await event.edit(
-            "\n**• سورس بلاكثون محدث الى أخر اصدار**"
-            f"**\n الفـرع: {UPSTREAM_REPO_BRANCH}**\n"
+        إعادة  الريبو . __del__ ()
+    مع  سياق النص . قمع ( BaseException ):
+        الريبو . create_remote ( "upstream" ، off_repo )
+    ups_rem  =  ريبو . بعيد ( "المنبع" )
+    ups_rem . إحضار ( ac_br )
+    changelog  =  await  gen_chlog ( repo ، f "HEAD..upstream / { ac_br } " )
+    # حالة خاصة للنشر
+    إذا كان  التغيير ==  "  "  وليس  force_update : 
+        انتظر  الحدث . تحرير (
+            " \ n ** • سورس بلاكثون محدث الى أخر اصدار **"
+            f "** \ n الفـرع: { UPSTREAM_REPO_BRANCH } ** \ n "
         )
-        return repo.__del__()
-    if conf == "" and not force_update:
-        await print_changelogs(event, ac_br, changelog)
-        await event.delete()
-        return await event.respond(
-            f"**• ارسل** `{cmdhd}حدث` لتحديث سورس بلاكثون"
+        إعادة  الريبو . __del__ ()
+    if  conf  ==  "  " وليس  force_update : 
+        في انتظار  print_changelogs ( حدث ، ac_br ، سجل التغيير )
+        انتظر  الحدث . حذف ()
+        عودة  انتظار  الحدث . رد (
+            f "** • ارسل **` { cmdhd } حدث` لتحديث سورس بلاكثون "
         )
 
-    if force_update:
-        await event.edit("**• جار التحديث الاجباري الى اخر اصدار انتظر قليلا**")
-    if conf == "الان":
-        await event.edit("**• جار تحديث سورس بلاكثون أنتظر قليلا**")
-        await update_bot(event, repo, ups_rem, ac_br)
-    return
+    إذا  فرض_التحديث :
+        انتظر  الحدث . تعديل ( "** • التحديث الاجباري الى اخر اصدار انتظر قليلا **" )
+    إذا  أسيوط  ==  "الان" :
+        انتظر  الحدث . تحرير ( "** • جار تحديث سورس بلاكثون أنتظر قليلا **" )
+        في انتظار  update_bot ( event ، repo ، ups_rem ، ac_br )
+    يعود
 
 
-@jmub.ar_cmd(
-    pattern="حدث$",
+@ jmub . ar_cmd (
+    نمط = "حدث $" ،
 )
-async def upstream(event):
-    if ENV:
-        if HEROKU_API_KEY is None or HEROKU_APP_NAME is None:
-            return await edit_or_reply(
-                event, "**• يجب عليك وضع فارات هيروكو المطلوبة للتحديث**"
+غير متزامن  def  المنبع ( حدث ):
+    إذا كان  ENV :
+        إذا كانت  HEROKU_API_KEY بلا  أو لم تكن HEROKU_APP_NAME بلا :     
+            العودة  في انتظار  edit_or_reply (
+                حدث _ "** •
             )
-    elif os.path.exists("config.py"):
-        return await edit_delete(
-            event,
-            f"**• انت تستخدم التنصيب يدويا يرجى ارسال امر** `{cmdhd}حدث`",
+     نظام elif . المسار . موجود ( "config.py" ):
+        العودة  تنتظر  edit_delete (
+            حدث _
+            f "** • انت تستخدم التنصيب يدويا يرجى ارسال امر **` { cmdhd } حدث` " ،
         )
-    event = await edit_or_reply(event, "**- جار جلب ملفات السورس يرجى الانتظار قليلا**")
-    off_repo = "https://github.com/ZEKO124/gibthon"
-    os.chdir("/app")
-    try:
-        txt = "**• لقد حدث خطأ اثناء التحديث**" + "**لقد حدث خطأ ما**\n"
+    event  =  wait  edit_or_reply ( event ، "** - جار جلب ملفات السورس يرجى الانتظار قليلا **" )
+    off_repo  =  "https://github.com/ZEKO124/gibthon"
+    نظام التشغيل . chdir ( "/ التطبيق" )
+    جرب :
+        txt  =  "** • لقد حدث خطأ اثناء التحديث **"  +  "** لقد حدث خطأ ما ** \ n "
 
-        repo = Repo()
-    except NoSuchPathError as error:
-        await event.edit(f"{txt}\n•المجلد  {error} لم يتم ايجاده")
-        return repo.__del__()
-    except GitCommandError as error:
-        await event.edit(f"{txt}\n• فشل مبكر الخطا: {error}")
-        return repo.__del__()
-    except InvalidGitRepositoryError:
-        repo = Repo.init()
-        origin = repo.create_remote("upstream", off_repo)
-        origin.fetch()
-        repo.create_head("master", origin.refs.master)
-        repo.heads.master.set_tracking_branch(origin.refs.master)
-        repo.heads.master.checkout(True)
-    with contextlib.suppress(BaseException):
-        repo.create_remote("upstream", off_repo)
-    ac_br = repo.active_branch.name
-    ups_rem = repo.remote("upstream")
-    ups_rem.fetch(ac_br)
-    await event.edit("**• جار الان التحديث أنتظر قليلا**")
-    await deploy(event, repo, ups_rem, ac_br, txt)
+        الريبو  =  الريبو ()
+    باستثناء  NoSuchPathError  كخطأ  : _
+        انتظر  الحدث . تحرير ( f " { txt } \ n • المجلد   { error } لم يتم العثور عليه" )
+        إعادة  الريبو . __del__ ()
+    باستثناء  GitCommandError  كخطأ  : _
+        انتظر  الحدث . تحرير ( f " { txt } \ n • فشل فشل الخطا: { error } " )
+        إعادة  الريبو . __del__ ()
+    باستثناء  InvalidGitRepositoryError :
+        الريبو  =  الريبو . الحرف الأول ()
+        الأصل  =  الريبو . create_remote ( "upstream" ، off_repo )
+        الأصل . جلب ()
+        الريبو . create_head ( "master" ، origin . refs . master )
+        الريبو . رؤساء . سيد . set_tracking_branch ( الأصل . المراجع . master )
+        الريبو . رؤساء . سيد . الخروج ( صحيح )
+    مع  سياق النص . قمع ( BaseException ):
+        الريبو . create_remote ( "upstream" ، off_repo )
+    ac_br  =  الريبو . active_branch . اسم
+    ups_rem  =  ريبو . بعيد ( "المنبع" )
+    ups_rem . إحضار ( ac_br )
+    انتظر  الحدث . تحرير ( "** • جار الان التحديث أنتظر قليلا **" )
+    في انتظار  النشر ( event ، repo ، ups_rem ، ac_br ، txt )
+تذييل
+حقوق النشر © لعام 2023 لشركة GitHub، Inc.
+التنقل في التذييل
+شروط
+خصوصية
+حماية
+حالة
+المستندات
+اتصل بـ GitHub
+التسعير
+API
+تمرين
+مدونة
+عن
