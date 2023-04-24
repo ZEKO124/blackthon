@@ -49,7 +49,7 @@ except Exception as meo:
 
 
 async def startup_process():
-    if not gvarstatus("TNSEEB"):
+    if not gvarstatus("xl444"):
         try:
             await verifyLoggerGroup()
             await load_plugins("plugins")
@@ -58,7 +58,7 @@ async def startup_process():
             LOGS.info("تم انتهاء عملية التنصيب بنجاح")
             LOGS.info(
                 f"لمعرفة اوامر السورس ارسل {cmdhr}الاوامر\
-                \nمجموعة قناة السورس  https://t.me/@gibthon9"
+                \nمجموعة قناة السورس  https://t.me/xl444"
             )
             LOGS.info("============================================================")
             await verifyLoggerGroup()
