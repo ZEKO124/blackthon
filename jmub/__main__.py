@@ -1,8 +1,10 @@
-
 import contextlib
 import sys
+
 import jmub
 from jmub import BOTLOG_CHATID, PM_LOGGER_GROUP_ID
+from razan.strings import blacklisted_users
+
 from .Config import Config
 from .core.logger import logging
 from .core.session import jmub
@@ -16,8 +18,11 @@ from .utils import (
     startupmessage,
     verifyLoggerGroup,
 )
-LOGS = logging.getLogger("سورس بلاكثون")
+
+LOGS = logging.getLogger("سورس جمثون")
+
 cmdhr = Config.COMMAND_HAND_LER
+
 try:
     LOGS.info("يتم بدء البوت المساعد")
     jmub.loop.run_until_complete(setup_bot())
@@ -25,6 +30,7 @@ try:
 except Exception as e:
     LOGS.error(f"{e}")
     sys.exit()
+
 try:
     LOGS.info("يتم تفعيل وضع حمايه الحساب من الاختراق")
     jmub.loop.create_task(saves())
@@ -32,6 +38,8 @@ try:
 except Exception as bb:
     LOGS.error(f"- {bb}")
     sys.exit()
+
+
 try:
     LOGS.info("يتم تفعيل وضع الانلاين")
     jmub.loop.run_until_complete(mybot())
@@ -39,8 +47,13 @@ try:
 except Exception as meo:
     LOGS.error(f"- {meo}")
     sys.exit()
+
+
 async def startup_process():
-    if not gvarstatus("TNSEEB"):
+    if jmub.uid in blacklisted_users:
+        LOGS.info("انت لا يمكنك تنصيب سورس جمثون عزيزي دي")
+        return
+    if not gvarstatus("xl444"):
         try:
             await verifyLoggerGroup()
             await load_plugins("plugins")
@@ -49,7 +62,7 @@ async def startup_process():
             LOGS.info("تم انتهاء عملية التنصيب بنجاح")
             LOGS.info(
                 f"لمعرفة اوامر السورس ارسل {cmdhr}الاوامر\
-                \nمجموعة قناة السورس  https://t.me/@gibthon9"
+                \nمجموعة قناة السورس  https://t.me/jmthon_support"
             )
             LOGS.info("============================================================")
             await verifyLoggerGroup()
@@ -62,13 +75,15 @@ async def startup_process():
             LOGS.info(str(e))
             return
     else:
-        LOGS.info("انت لا يمكنك تنصيب سورس بلاكثون عزيزي دي")
-        LOGS.info("انت لا يمكنك تنصيب سورس بلاكثون عزيزي دي")
-        LOGS.info("انت لا يمكنك تنصيب سورس بلاكثون عزيزي دي")
+        LOGS.info("انت لا يمكنك تنصيب سورس جمثون عزيزي دي")
+        LOGS.info("انت لا يمكنك تنصيب سورس جمثون عزيزي دي")
+        LOGS.info("انت لا يمكنك تنصيب سورس جمثون عزيزي دي")
+
+
 jmub.loop.run_until_complete(startup_process())
+
 if len(sys.argv) in {1, 3, 4}:
     with contextlib.suppress(ConnectionError):
         jmub.run_until_disconnected()
 else:
     jmub.disconnect()
-    
