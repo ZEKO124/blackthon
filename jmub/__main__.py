@@ -1,24 +1,39 @@
-import contextlib
 import sys
 
-import jmub
-from jmub import BOTLOG_CHATID, PM_LOGGER_GROUP_ID
+import jepthon
+
+from jepthon import BOTLOG_CHATID, HEROKU_APP, PM_LOGGER_GROUP_ID
 
 from .Config import Config
+
 from .core.logger import logging
-from .core.session import jmub
-from .sql_helper.globals import gvarstatus
+
+from .core.session import jepiq
+
 from .utils import (
+
     add_bot_to_logger_group,
+
+    install_externalrepo,
+
+    ipchange,
+
     load_plugins,
-    mybot,
-    saves,
+
     setup_bot,
+
+    mybot,
+
     startupmessage,
+
     verifyLoggerGroup,
+
+    saves,
+
 )
 
-LOGS = logging.getLogger("Blackton")
+LOGS = logging.getLogger("jepthon")
+
 print(jepthon.__copyright__)
 
 print("Licensed under the terms of the " + jepthon.__license__)
@@ -26,26 +41,27 @@ print("Licensed under the terms of the " + jepthon.__license__)
 cmdhr = Config.COMMAND_HAND_LER
 
 try:
-    LOGS.info("يتم بدء البوت المساعد")
-    jmub.loop.run_until_complete(setup_bot())
-    LOGS.info("اكتملت عمليه البوت المساعد")
+
+    LOGS.info("جارِ بدء بوت بلاكتون ✓")
+
+    jepiq.loop.run_until_complete(setup_bot())
+
+    LOGS.info("تم اكتمال تنصيب البوت ✓")
+
 except Exception as e:
-    LOGS.error(f"{e}")
+
+    LOGS.error(f"{str(e)}")
+
     sys.exit()
 
 try:
-    LOGS.info("يتم تفعيل وضع حمايه الحساب من الاختراق")
-    jmub.loop.create_task(saves())
-    LOGS.info("تم تفعيل وضع حمايه الحساب من الاختراق")
-except Exception as bb:
-    LOGS.error(f"- {bb}")
-    sys.exit()
 
-
-try:
     LOGS.info("يتم تفعيل وضع الانلاين")
-    jmub.loop.run_until_complete(mybot())
+
+    jepiq.loop.run_until_complete(mybot())
+
     LOGS.info("تم تفعيل وضع الانلاين بنجاح ✓")
+
 except Exception as jep:
 
     LOGS.error(f"- {jep}")
@@ -70,37 +86,24 @@ async def startup_process():
 
         return
 
-            await verifyLoggerGroup()
+    await verifyLoggerGroup()
 
-            await verifyLoggerGroup()
-            await load_plugins("plugins")
-            await load_plugins("assistant")
-            LOGS.info("============================================================")
-            LOGS.info("تم انتهاء عملية التنصيب بنجاح")
-            LOGS.info(
-                f"لمعرفة اوامر السورس ارسل {cmdhr}الاوامر\
-                \nمجموعة قناة السورس  https://t.me/xl444"
-            )
-            LOGS.info("============================================================")
-            await verifyLoggerGroup()
-            await add_bot_to_logger_group(BOTLOG_CHATID)
-            if PM_LOGGER_GROUP_ID != -100:
-                await add_bot_to_logger_group(PM_LOGGER_GROUP_ID)
-            await startupmessage()
-            return
-        except Exception as e:
-            LOGS.info(str(e))
-            return
-    else:
-        LOGS.info("انت لا يمكنك تنصيب سورس بلاكثون عزيزي دي")
-        LOGS.info("انت لا يمكنك تنصيب سورس بلاكثون عزيزي دي")
-        LOGS.info("انت لا يمكنك تنصيب سورس بلاكثون عزيزي دي")
+    await load_plugins("plugins")
 
+    await load_plugins("assistant")
 
-jmub.loop.run_until_complete(startup_process())
+    print("➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖")
 
-if len(sys.argv) in {1, 3, 4}:
-    with contextlib.suppress(ConnectionError):
-        jmub.run_until_disconnected()
-else:
-    jmub.disconnect()
+    print("᯽︙بـوت بلاكتون يعـمل بـنجاح ")
+
+    print(
+
+        f"تم تشغيل الانلاين تلقائياً ارسل {cmdhr}الاوامر لـرؤيـة اوامر السورس\
+
+        \nللمسـاعدة تواصـل  https://t.me/xl444"
+
+    )
+
+    print("➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖➖")
+
+    
