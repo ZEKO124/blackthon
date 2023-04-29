@@ -51,7 +51,6 @@ except Exception as meo:
 
 async def startup_process():
 
-    check = await ipchange()
 
         return
 
