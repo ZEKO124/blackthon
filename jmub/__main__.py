@@ -43,15 +43,18 @@ try:
     LOGS.info("يتم تفعيل وضع الانلاين")
     jmub.loop.run_until_complete(mybot())
     LOGS.info("تم تفعيل وضع الانلاين بنجاح ✓")
-except Exception as meo:
-    LOGS.error(f"- {meo}")
-    sys.exit()
-
-
+except Exception as jep:
+    LOGS.error(f"- {jep}")
+    sys.exit()    
+class CatCheck:
+    def __init__(self):
+        self.sucess = True
+Catcheck = CatCheck()
 async def startup_process():
-    if not gvarstatus("xl444"):
-        try:
-            await verifyLoggerGroup()
+    check = await ipchange()
+    if check is not None:
+        Catcheck.sucess = False
+        return
             await load_plugins("plugins")
             await load_plugins("assistant")
             LOGS.info("============================================================")
