@@ -18,7 +18,10 @@ from .utils import (
     verifyLoggerGroup,
 )
 
-LOGS = logging.getLogger("سورس بلاكثون")
+LOGS = logging.getLogger("Blackton")
+print(jepthon.__copyright__)
+
+print("Licensed under the terms of the " + jepthon.__license__)
 
 cmdhr = Config.COMMAND_HAND_LER
 
@@ -43,16 +46,31 @@ try:
     LOGS.info("يتم تفعيل وضع الانلاين")
     jmub.loop.run_until_complete(mybot())
     LOGS.info("تم تفعيل وضع الانلاين بنجاح ✓")
-except Exception as meo:
+except Exception as jep:
 
-    LOGS.error(f"- {meo}")
+    LOGS.error(f"- {jep}")
 
-    sys.exit()
+    sys.exit()    
+
+class CatCheck:
+
+    def __init__(self):
+
+        self.sucess = True
+
+Catcheck = CatCheck()
 
 async def startup_process():
 
+    check = await ipchange()
+
+    if check is not None:
+
+        Catcheck.sucess = False
 
         return
+
+            await verifyLoggerGroup()
 
             await verifyLoggerGroup()
             await load_plugins("plugins")
