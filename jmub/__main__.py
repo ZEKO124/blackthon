@@ -52,8 +52,7 @@ except Exception as meo:
 async def startup_process():
 
     check = await ipchange()
-    if check is not None:
-        Catcheck.sucess = False
+
         return
 
             await verifyLoggerGroup()
